@@ -43,6 +43,16 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>my-internal-repo</id>
+            <url>http://my-internal-repo/repository</url>
+        </repository>
+    </repositories>
 
 
 </project>

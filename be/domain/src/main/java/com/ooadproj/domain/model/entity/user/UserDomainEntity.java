@@ -4,9 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Data
 @Entity
+@EntityScan
+@EnableJpaRepositories
 @Table(name = "user")
 @DynamicInsert
 @DynamicUpdate
