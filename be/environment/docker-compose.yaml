@@ -1,6 +1,6 @@
 name: fakebook
 services:
-  fakebook-be:
+  be:
     restart: always
     ports:
       - "${BE_PORT}:${BE_PORT}"
