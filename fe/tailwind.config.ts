@@ -1,4 +1,5 @@
-import type { Config } from 'tailwindcss';
+// @ts-ignore
+import { Config } from 'tailwindcss';
 
 const config = {
   content: ['./src/component/**/*.{js,jsx}', './src/screen/**/*.{js, jsx}', './src/**/*.jsx'],
@@ -8,6 +9,10 @@ const config = {
       center: true,
       padding: '2rem',
       screens: {
+        'sm': '576px',
+        'md': '768px',
+        'lg': '992px',
+        'xl': '1200px',
         '2xl': '1400px'
       }
     },
@@ -20,39 +25,23 @@ const config = {
         bold: '700'
       },
       colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        'background-paper': '#F3F4F6',
+        'background-default': '#FAFAFA',
+        'black-text': '#2E2E2E',
+        'white-text': '#FAFAFA',
+        'divided-line': '#464646',
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))'
+          light: '#F3ECFE',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))'
+          light: '#7940ED',
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))'
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))'
+          light: '#DC143C',
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))'
+          light: '#33284A',
         },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))'
-        },
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))'
-        }
       },
       borderRadius: {
         lg: 'var(--radius)',
