@@ -1,10 +1,10 @@
 @import 'tailwindcss';
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
 
 @plugin 'tailwindcss-animate';
 
 @custom-variant dark (&:is(.dark *));
-@import 'tailwindcss/theme.css' layer(theme);
-@import 'tailwindcss/preflight.css' layer(base);
 @layer theme, base, components, utilities;
 ::-webkit-scrollbar {
   width: 8px;
@@ -95,6 +95,18 @@
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
   }
+}
+
+@theme {
+  --color-primary-light: #F3ECFE;
+  --color-secondary-light: #7940ed;
+  --color-destructive-light: #dc143c;
+  --color-accent-light: #33284a;
+  --color-background-paper: #F3F4F6;
+  --color-background-default: #FAFAFA;
+  --color-black-text: #2E2E2E;
+  --color-white-text: #FAFAFA;
+  --color-divided-line: #464646;
 }
 
 @font-face {

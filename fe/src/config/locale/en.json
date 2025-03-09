@@ -1,5 +1,6 @@
 {
-  "example": {
-    "hello": "hello"
+  "general": {
+    "Log_In": "Log In",
+    "Sign_Up": "Sign Up"
   }
 }
