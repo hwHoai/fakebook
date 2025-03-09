@@ -1,5 +1,26 @@
 {
   "example": {
     "hello": "xin chào"
+  },
+
+  "sidebar_right": {
+    "suggest": "Gợi ý",
+    "contact": "Liên hệ"
+  },
+
+  "post": {
+    "like": "Thích",
+    "comment": "Bình luận",
+    "share": "Chia sẻ",
+    "hours_ago": "giờ trước"
+  },
+
+  "post_box": {
+    "placeholder": "Bạn đang nghĩ gì?"
+  },
+
+  "button": {
+    "adding_media": "Thêm ảnh/video",
+    "follow": "Theo dõi"
   }
 }

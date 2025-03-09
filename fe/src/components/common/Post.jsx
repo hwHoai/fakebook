@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { ThumbsUp, MessageCircle, Share2, MoreHorizontal } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 export const Post = () => {
+  const { t } = useTranslation();
   const [liked, setLiked] = useState(false);
 
   return (
@@ -14,7 +16,7 @@ export const Post = () => {
           <img src='src/assets/img/test.jpg' alt='Avatar' className='w-10 h-10 rounded-full' />
           <div>
             <p className='font-bold'>Cat Babe</p>
-            <p className='text-sm text-gray-500'>2 hours ago</p>
+            <p className='text-sm text-gray-500'>2 {t('post.hours_ago')}</p>
           </div>
         </div>
         <MoreHorizontal className='text-gray-500 cursor-pointer' />
@@ -41,17 +43,17 @@ export const Post = () => {
           onClick={() => setLiked(!liked)}
         >
           <ThumbsUp className={`w-5 h-5 ${liked ? 'text-blue-500' : 'text-gray-600'}`} />
-          <span>114k Likes</span>
+          <span>114k {t('post.like')}</span>
         </Button>
 
         <Button variant='ghost' className='flex items-center gap-2 text-gray-600 hover:text-purple-500'>
           <MessageCircle className='w-5 h-5' />
-          <span>1k Comments</span>
+          <span>1k {t('post.comment')}</span>
         </Button>
 
         <Button variant='ghost' className='flex items-center gap-2 text-gray-600 hover:text-green-500'>
           <Share2 className='w-5 h-5' />
-          <span>Share to others</span>
+          <span>{t('post.share')}</span>
         </Button>
       </div>
     </Card>

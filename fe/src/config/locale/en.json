@@ -1,5 +1,25 @@
 {
   "example": {
     "hello": "hello"
+  },
+
+  "sidebar_right": {
+    "suggest": "Suggestions",
+    "contact": "Contacts"
+  },
+
+  "post": {
+    "like": "Likes",
+    "comment": "Comments",
+    "share": "Share to others",
+    "hours_ago": "hours ago"
+  },
+
+  "post_box": {
+    "placeholder": "What's on your mind?"
+  },
+
+  "button": {
+    "adding_media": "Add videos/images"
   }
 }
