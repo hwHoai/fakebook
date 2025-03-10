@@ -15,12 +15,17 @@
     "hours_ago": "giờ trước"
   },
 
-  "post_box": {
+  "input": {
     "placeholder": "Bạn đang nghĩ gì?"
+  },
+
+  "post_upload": {
+    "create_post": "Tạo bài viết"
   },
 
   "button": {
     "adding_media": "Thêm ảnh/video",
-    "follow": "Theo dõi"
+    "follow": "Theo dõi",
+    "post": "Đăng"
   }
 }

@@ -29,9 +29,9 @@ export const Post = () => {
         </p>
         {/* Images */}
         <div className='flex gap-2 mt-3'>
-          <img src='src/assets/img/test.jpg' className='w-20 h-20 rounded-lg object-cover' />
-          <img src='src/assets/img/test.jpg' className='w-20 h-20 rounded-lg object-cover' />
-          <img src='src/assets/img/test.jpg' className='w-20 h-20 rounded-lg object-cover' />
+          <img src='src/assets/img/test.jpg' className='w-25 h-35 rounded-xl object-cover mr-2.5' />
+          <img src='src/assets/img/test.jpg' className='w-25 h-35 rounded-xl object-cover mr-2.5' />
+          <img src='src/assets/img/test.jpg' className='w-25 h-35 rounded-xl object-cover mr-2.5' />
         </div>
       </CardContent>
 
@@ -39,19 +39,19 @@ export const Post = () => {
       <div className='flex justify-between items-center mt-4'>
         <Button
           variant='ghost'
-          className='flex items-center gap-2 text-gray-600 hover:text-blue-500'
+          className='flex items-center gap-2 text-gray-600 hover:text-blue-500 cursor-pointer'
           onClick={() => setLiked(!liked)}
         >
           <ThumbsUp className={`w-5 h-5 ${liked ? 'text-blue-500' : 'text-gray-600'}`} />
           <span>114k {t('post.like')}</span>
         </Button>
 
-        <Button variant='ghost' className='flex items-center gap-2 text-gray-600 hover:text-purple-500'>
+        <Button variant='ghost' className='flex items-center gap-2 text-gray-600 hover:text-purple-500 cursor-pointer'>
           <MessageCircle className='w-5 h-5' />
           <span>1k {t('post.comment')}</span>
         </Button>
 
-        <Button variant='ghost' className='flex items-center gap-2 text-gray-600 hover:text-green-500'>
+        <Button variant='ghost' className='flex items-center gap-2 text-gray-600 hover:text-green-500 cursor-pointer'>
           <Share2 className='w-5 h-5' />
           <span>{t('post.share')}</span>
         </Button>

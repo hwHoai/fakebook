@@ -15,11 +15,17 @@
     "hours_ago": "hours ago"
   },
 
-  "post_box": {
+  "input": {
     "placeholder": "What's on your mind?"
   },
 
+  "post_upload": {
+    "create_post": "Create post"
+  },
+
   "button": {
-    "adding_media": "Add videos/images"
+    "adding_media": "Add videos/images",
+    "follow": "Follow",
+    "post": "Post"
   }
 }
