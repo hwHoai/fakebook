@@ -24,25 +24,6 @@ const config = {
         medium: '500',
         bold: '700'
       },
-      colors: {
-        'background-paper': '#F3F4F6',
-        'background-default': '#FAFAFA',
-        'black-text': '#2E2E2E',
-        'white-text': '#FAFAFA',
-        'divided-line': '#464646',
-        primary: {
-          light: '#F3ECFE',
-        },
-        secondary: {
-          light: '#7940ED',
-        },
-        destructive: {
-          light: '#DC143C',
-        },
-        accent: {
-          light: '#33284A',
-        },
-      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

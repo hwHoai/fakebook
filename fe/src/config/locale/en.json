@@ -27,5 +27,10 @@
     "adding_media": "Add videos/images",
     "follow": "Follow",
     "post": "Post"
+  },
+
+  "general": {
+    "Log_In": "Log In",
+    "Sign_Up": "Sign Up"
   }
 }
