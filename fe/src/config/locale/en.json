@@ -1,4 +1,34 @@
 {
+  "example": {
+    "hello": "hello"
+  },
+
+  "sidebar_right": {
+    "suggest": "Suggestions",
+    "contact": "Contacts"
+  },
+
+  "post": {
+    "like": "Likes",
+    "comment": "Comments",
+    "share": "Share to others",
+    "hours_ago": "hours ago"
+  },
+
+  "input": {
+    "placeholder": "What's on your mind?"
+  },
+
+  "post_upload": {
+    "create_post": "Create post"
+  },
+
+  "button": {
+    "adding_media": "Add videos/images",
+    "follow": "Follow",
+    "post": "Post"
+  },
+
   "general": {
     "Log_In": "Log In",
     "Sign_Up": "Sign Up"

@@ -6,6 +6,9 @@ import { defineConfig } from 'vite';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  define: {
+    global: {} // Định nghĩa `global` để tránh lỗi "global is not defined"
+  },
   resolve: {
     alias: {
       // eslint-disable-next-line no-undef
