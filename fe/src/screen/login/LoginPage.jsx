@@ -8,7 +8,7 @@ export const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div
-      className='flex h-screen w-full min-w-[800px] min-h-[500px] overflow-auto relative'
+      className='flex h-screen w-full min-w-[900px] min-h-[500px] overflow-auto relative'
       style={{
         backgroundImage: `url(${login_background})`,
         backgroundSize: 'cover',
@@ -18,7 +18,7 @@ export const LoginPage = () => {
       <div className='text-2xl absolute top-6 left-6 font-semibold inline-block' style={{ color: '#fff' }}>
         {BRAND_NAME}
       </div>
-      <div className='w-[40%] p-10 flex flex-col items-center justify-center text-white '>
+      <div className='w-[40%]  p-10 flex flex-col items-center justify-center text-white '>
         <h2 className='text-3xl font-semibold'>Dont Have an Account Yet?</h2>
         <p className='mt-8 text-base text-center'>
           Sign up today to connect with friends, share your moments, and stay updated with the latest trends. Join our

@@ -5,7 +5,7 @@ import register_background from '../../assets/img/register_background.png';
 export const RegisterPage = () => {
   return (
     <div
-      className='flex h-screen w-full min-w-[800px] min-h-[500px] overflow-auto'
+      className='flex h-screen w-full min-w-[900px] min-h-[500px] overflow-auto'
       style={{
         backgroundImage: `url(${register_background})`,
         backgroundSize: 'cover',
