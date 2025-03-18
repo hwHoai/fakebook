@@ -32,11 +32,11 @@ export const PostUpload = ({ isOpen, onClose }) => {
     <div
       onClick={handleOverlayClick}
       id='popup-overlay'
-      className='fixed inset-0 flex items-center justify-center bg-white/70 '
+      className='fixed inset-0 flex z-1000 items-center justify-center bg-white/70 '
     >
       <Card className='w-[500px] bg-white p-4 rounded-xl shadow-lg'>
         <div className='flex justify-between items-center border-b pb-2'>
-          <h2 className='text-lg font-semibold absolute left-1/2 transform -translate-x-1/2'>
+          <h2 className='text-base font-semibold absolute left-1/2 transform -translate-x-1/2'>
             {t('post_upload.create_post')}
           </h2>
           <button onClick={handleClosePopUp} className='p-2 rounded-full hover:bg-gray-200 ml-auto'>
@@ -47,7 +47,7 @@ export const PostUpload = ({ isOpen, onClose }) => {
           <div className='flex items-center gap-3'>
             <img src='src/assets/img/test.jpg' alt='User Avatar' className='w-10 h-10 rounded-full' />
             <div>
-              <p className='font-medium'>Nam Hoàng</p>
+              <p className='font-medium text-base'>Nam Hoàng</p>
             </div>
           </div>
           <textarea
@@ -63,7 +63,7 @@ export const PostUpload = ({ isOpen, onClose }) => {
         </div>
 
         <div className='flex justify-between p-2 border-t'>
-          <Button className='bg-[#7940ed] w-full ml-2 text-base' disabled={isPostDisabled}>
+          <Button className='bg-[#7940ed] w-full ml-2 text-sm' disabled={isPostDisabled}>
             {t('button.post')}
           </Button>
         </div>

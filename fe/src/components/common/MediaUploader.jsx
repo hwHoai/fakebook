@@ -31,9 +31,9 @@ export const MediaUploader = ({ files, setFiles }) => {
   return (
     <div className='max-w-2xl mx-auto'>
       {/* Input chọn file */}
-      <label className='border rounded-md p-4  flex justify-center items-center cursor-pointer hover:bg-gray-100'>
+      <label className='border rounded-md p-3  flex justify-center items-center cursor-pointer hover:bg-gray-100'>
         <Image size={24} className='text-gray-500' />
-        <span className='ml-2 text-gray-600'>{t('button.adding_media')}</span>
+        <span className='ml-2 text-sm text-gray-600'>{t('button.adding_media')}</span>
         <input type='file' accept='image/*,video/*' multiple onChange={handleFileChange} className='hidden' />
       </label>
 
@@ -81,6 +81,9 @@ export const MediaUploader = ({ files, setFiles }) => {
           plugins={[Video]}
           controller={{ closeOnBackdropClick: true }}
           on={{ view: ({ index }) => setLightboxIndex(index) }}
+          styles={{
+            container: { background: 'rgba(0, 0, 0, 0.8)' } // Change opacity here
+          }}
         />
       )}
     </div>

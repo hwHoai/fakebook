@@ -8,7 +8,7 @@ export const PostBox = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   return (
-    <div className='w-150 bg-[#f3ecfe] p-4 rounded-2xl'>
+    <div className='w-140 bg-[#f3ecfe] p-4 rounded-2xl'>
       <div className='flex items-center gap-3'>
         {/* Avatar */}
         <img src='src/assets/img/test.jpg' alt='User Avatar' className='w-10 h-10 rounded-full' />
