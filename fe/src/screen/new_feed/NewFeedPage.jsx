@@ -8,12 +8,21 @@ export const NewFeedPage = () => {
     <div className=''>
       <Header />
       <SidebarRight />
-      <div className='flex flex-col justify-center items-center w-full'>
+      <div className='flex pt-21 flex-col justify-center items-center w-full'>
         <div className='mt-3'>
           <PostBox />
         </div>
         <div className='mt-10'>
-          <Post />
+          <Post
+            media={[
+              'src/assets/img/test.jpg',
+              'src/assets/video/test2.mp4',
+              'src/assets/img/test.jpg',
+              'src/assets/img/test.jpg',
+              'src/assets/img/test.jpg',
+              'src/assets/img/test.jpg'
+            ]}
+          />
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'; // Import i18n translation
 export const SidebarRight = () => {
   const { t } = useTranslation();
   return (
-    <div className='fixed right-0 top-23 h-full w-[32%] bg-white p-4'>
+    <div className='fixed z-999 right-0 top-23 h-full w-[23%] bg-white p-4'>
       {/* Suggestion Section */}
       <div>
         <h2 className='text-xl font-semibold text-gray-800'>{t('sidebar_right.suggest')}</h2>
@@ -12,10 +12,10 @@ export const SidebarRight = () => {
           {['Dep trai vai', 'Anh toc xanh', 'Luffy Nguyen'].map((name, index) => (
             <div key={index} className='flex items-center justify-between'>
               <div className='flex items-center gap-3'>
-                <img src='src/assets/img/test.jpg' alt={name} className='w-12 h-12 rounded-full' />
-                <span className='text-lg text-gray-700'>{name}</span>
+                <img src='src/assets/img/test.jpg' alt={name} className='w-10 h-10 rounded-full' />
+                <span className='text-base text-gray-700'>{name}</span>
               </div>
-              <button className='bg-[#3b1e67] text-white px-4 py-1 text-base rounded-lg cursor-pointer'>
+              <button className='bg-[#3b1e67] text-white px-4 py-1 text-sm rounded-lg cursor-pointer'>
                 {t('button.follow')}
               </button>
             </div>
@@ -45,12 +45,12 @@ export const SidebarRight = () => {
                 className='flex items-center justify-between cursor-pointer hover:bg-gray-200 rounded-md px-2 py-2'
               >
                 <div className='flex items-center gap-3 relative'>
-                  <img src='src/assets/img/test.jpg' alt={name} className='w-10 h-10 rounded-full' />
+                  <img src='src/assets/img/test.jpg' alt={name} className='w-8 h-8 rounded-full' />
                   {/* Online Status */}
                   {index % 2 === 0 && (
                     <span className='absolute bottom-0 left-7 w-3 h-3 bg-green-500 rounded-full border-2 border-white'></span>
                   )}
-                  <span className='text-gray-700'>{name}</span>
+                  <span className='text-gray-700 text-sm'>{name}</span>
                 </div>
               </div>
             ))}
