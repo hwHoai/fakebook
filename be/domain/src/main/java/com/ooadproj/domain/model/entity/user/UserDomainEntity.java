@@ -1,49 +1,45 @@
 package com.ooadproj.domain.model.entity.user;
 
+import com.ooadproj.domain.model.entity.key.UserKeyTokenDomainEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "user")
+@EntityScan
+@EnableJpaRepositories
+@Table(name = "user_info")
 @DynamicInsert
 @DynamicUpdate
 public class UserDomainEntity {
 
-    private @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @Column(name = "user_id")
+    private Long id;
 
-    @Column(columnDefinition = "VARCHAR(255) comment 'user name'", nullable = false, unique = true)
-    private String username;
+    @Column(columnDefinition = "VARCHAR(255) comment 'user first name'", nullable = false)
+    private String firstName;
+
+    @Column(columnDefinition = "VARCHAR(255) comment 'user last name'", nullable = false)
+    private String lastName;
+
+    @Column(columnDefinition = "VARCHAR(255) comment 'user email'", nullable = false, unique = true)
+    private String userEmail;
 
     @Column(columnDefinition = "VARCHAR(255) comment 'user password'", nullable = false)
     private String password;
 
+    @Column(columnDefinition = "VARCHAR(255) comment 'user phone number'", unique = true)
+    private String phoneNumber;
 
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    private List<UserKeyTokenDomainEntity> keyTokenList;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

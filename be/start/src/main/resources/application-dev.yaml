@@ -1,17 +1,17 @@
 server:
-  port: 8081
+  port:${BE_PORT}
 
 spring:
   datasource:
-    url:
-    username:
-    password:
+    url: jdbc:mysql://${DB_HOST_NAME}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
