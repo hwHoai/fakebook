@@ -3,6 +3,6 @@ server:
 
 spring:
   application:
-    name: tickmarket
+    name: fakebook
   profiles:
     active: dev
