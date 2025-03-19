@@ -6,7 +6,7 @@
 
     <groupId>com.ooadproj</groupId>
     <artifactId>fakebook</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>pom</packaging>
     <modules>
         <module>start</module>
@@ -31,10 +31,12 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -63,5 +65,17 @@
             <version>4.5.0</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>my-internal-repo</id>
+            <url>http://my-internal-repo/repository</url>
+        </repository>
+    </repositories>
+
 
 </project>

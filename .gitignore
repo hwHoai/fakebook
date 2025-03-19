@@ -11,6 +11,9 @@ fe/node_modules
 dist
 dist-ssr
 *.local
+**/target/**/*-*.yaml
+**/target/**
+
 
 # Editor directories and files
 .vscode/*

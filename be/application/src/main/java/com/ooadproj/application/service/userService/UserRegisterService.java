@@ -31,7 +31,6 @@ public class UserRegisterService {
     @Autowired
     private UserKeyTokenDomainRepository userKeyTokenDomainRepository;
 
-    @Transactional
     public JwtToken registerUser(UserDomainEntity user) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, BadRequestException {
         System.out.println("Registering user: " + user);
         if(user == null) {
