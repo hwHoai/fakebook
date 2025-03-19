@@ -1,0 +1,112 @@
+import { Link } from 'react-router';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { registerValidationSchema } from '../../validation/authValidaionSchema';
+import { BRAND_NAME } from '../../constant/general';
+import register_background from '../../assets/img/register_background.png';
+
+export const RegisterPage = () => {
+  return (
+    <div
+      className='flex h-screen w-full min-w-[900px] min-h-[500px] overflow-auto'
+      style={{
+        backgroundImage: `url(${register_background})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
+      <div className='w-[60%] p-6 flex flex-col'>
+        <div className='text-2xl font-semibold inline-block' style={{ color: '#7940ed' }}>
+          {BRAND_NAME}
+        </div>
+        <h1 className='text-3xl font-bold text-gray-800 mt-6.5'>Sign up for an account</h1>
+        <p className='text-gray-500 mt-2 max-w-md'>
+          You’re missing out! Sign up now to connect, explore, and experience everything we offer!
+        </p>
+
+        <Formik
+          initialValues={{ firstName: '', lastName: '', email: '', password: '' }}
+          validationSchema={registerValidationSchema}
+          onSubmit={(values, { setSubmitting }) => {
+            console.log('Form data', values);
+            setTimeout(() => {
+              setSubmitting(false);
+            }, 1000);
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form className='mt-6 space-y-8'>
+              <div className='flex gap-4'>
+                <div className='w-1/4 flex flex-col'>
+                  <Field
+                    autoComplete='new-password'
+                    type='text'
+                    name='firstName'
+                    placeholder='Your first name'
+                    className='w-full p-2 border-1 border-accent-light rounded'
+                  />
+                  <ErrorMessage name='firstName' component='div' className='text-red-500 text-sm  mt-2' />
+                </div>
+
+                <div className='w-1/4 flex flex-col'>
+                  <Field
+                    autoComplete='new-password'
+                    type='text'
+                    name='lastName'
+                    placeholder='Your last name'
+                    className='w-full p-2 border-1 border-accent-light rounded'
+                  />
+                  <ErrorMessage name='lastName' component='div' className='text-red-500 text-sm  mt-2' />
+                </div>
+              </div>
+
+              <div className='flex flex-col gap-10'>
+                <div className='flex flex-col w-[calc(50%+1rem)]'>
+                  <Field
+                    autoComplete='new-password'
+                    type='email'
+                    name='email'
+                    placeholder='Enter your email address'
+                    className='w-full p-2 border-1 border-accent-light rounded'
+                  />
+                  <ErrorMessage name='email' component='div' className='text-red-500 text-sm mt-2' />
+                </div>
+
+                <div className='flex flex-col w-[calc(50%+1rem)]'>
+                  <Field
+                    autoComplete='new-password'
+                    type='password'
+                    name='password'
+                    placeholder='Enter your password'
+                    className='w-full p-2 border-1 border-accent-light rounded'
+                  />
+                  <ErrorMessage name='password' component='div' className='text-red-500 text-sm  mt-2' />
+                </div>
+              </div>
+
+              <button
+                type='submit'
+                disabled={isSubmitting}
+                className='w-[calc(50%+1rem)] cursor-pointer bg-gradient-to-r from-purple-500 to-indigo-500 text-white p-2 text-lg rounded'
+              >
+                {isSubmitting ? 'Signing up...' : 'Sign up'}
+              </button>
+            </Form>
+          )}
+        </Formik>
+      </div>
+
+      <div className='w-[40%] flex flex-col items-center justify-center text-white'>
+        <h2 className='text-3xl font-semibold'>Already Signed up?</h2>
+        <p className='mt-10 text-lg text-center'>
+          Log in to your account so you can start creating your own exploding experience!
+        </p>
+        <Link
+          to='/login'
+          className='mt-10 bg-[#7940ed] cursor-pointer text-white border-1 p-2 px-7 border-white rounded'
+        >
+          Log in
+        </Link>
+      </div>
+    </div>
+  );
+};
