@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { BRAND_NAME } from '../../constant/general';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { loginValidationSchema } from '../../validation/authValidaionSchema';
 import { Link } from 'react-router';
 import { Eye, EyeOff } from 'lucide-react';
 import login_background from '../../assets/img/login_background.png';
 
 export const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div
       className='flex h-screen w-full min-w-[900px] min-h-[500px] overflow-auto relative'
@@ -39,41 +42,65 @@ export const LoginPage = () => {
           <p className='text-gray-600 text-base mt-1'>Log in to your account to continue!</p>
         </div>
         <div className='bg-white mt-6 p-6 rounded-lg shadow-lg w-110'>
-          <form className='mt-6'>
-            <div className='mb-4'>
-              <input
-                type='text'
-                placeholder='Email address or phone number'
-                className='w-full px-3 py-4 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500'
-              />
-            </div>
-            <div className='mb-4 relative'>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                placeholder='Password'
-                className='w-full px-3 py-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 pr-10'
-              />
-              <span
-                className='absolute inset-y-0 right-3 flex items-center text-gray-500 cursor-pointer'
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </span>
-            </div>
-            <div className='flex mt-5 px-5 items-center justify-between text-sm text-gray-600'>
-              <label className='flex items-center  text-base'>
-                <input type='checkbox' className='mr-2' /> Remember me
-              </label>
-              <a href='#' className='text-blue-500 text-base hover:underline'>
-                Forgot password?
-              </a>
-            </div>
-            <div className='w-full mt-8 flex justify-center'>
-              <button className='w-4/5 py-2 bg-gradient-to-r cursor-pointer from-purple-600 to-purple-400 text-white rounded-lg hover:opacity-90'>
-                Log in
-              </button>
-            </div>
-          </form>
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            validationSchema={loginValidationSchema}
+            onSubmit={(values, { setSubmitting }) => {
+              console.log('Form data', values);
+              setTimeout(() => {
+                setSubmitting(false);
+              }, 1000);
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form className='mt-6'>
+                <div className='mb-4'>
+                  <Field
+                    autoComplete='new-password'
+                    type='text'
+                    name='email'
+                    placeholder='Email address or phone number'
+                    className='w-full px-3 py-4 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500'
+                  />
+                  <ErrorMessage name='email' component='div' className='text-red-500 text-sm pl-3 mt-2' />
+                </div>
+                <div className='mb-2 relative'>
+                  <Field
+                    autoComplete='new-password'
+                    name='password'
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder='Password'
+                    className='w-full px-3 py-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 pr-10'
+                  />
+                  <span
+                    className='absolute inset-y-0 right-3 flex items-center text-gray-500 cursor-pointer'
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </span>
+                </div>
+                <ErrorMessage name='password' component='div' className='text-red-500 text-sm pl-3 ' />
+
+                <div className='flex mt-5 px-5 items-center justify-between text-sm text-gray-600'>
+                  <label className='flex items-center  text-base'>
+                    <input type='checkbox' className='mr-2' /> Remember me
+                  </label>
+                  <a href='#' className='text-blue-500 text-base hover:underline'>
+                    Forgot password?
+                  </a>
+                </div>
+                <div className='w-full mt-8 flex justify-center'>
+                  <button
+                    type='submit'
+                    disabled={isSubmitting}
+                    className='w-4/5 py-2 bg-gradient-to-r cursor-pointer from-purple-600 to-purple-400 text-white rounded-lg hover:opacity-90'
+                  >
+                    {isSubmitting ? 'Logging in...' : 'Log in'}
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </div>
       </div>
     </div>

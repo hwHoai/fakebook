@@ -59,15 +59,19 @@ export const Header = () => {
         <></>
       ) : (
         <div className='flex gap-5'>
-          <Button
-            variant={'outline'}
-            className='px-5 rounded-xl py-2 border-2 border-secondary-light hover:bg-secondary-light hover:text-white-text hover:cursor-pointer'
-          >
-            {t('general.Sign_Up')}
-          </Button>
-          <Button className='px-5 rounded-xl py-2 text-black-text bg-primary-light hover:bg-secondary-light hover:text-white-text hover:cursor-pointer'>
-            {t('general.Log_In')}
-          </Button>
+          <Link to='/register'>
+            <Button
+              variant={'outline'}
+              className='px-5 rounded-xl py-2 border-2 border-secondary-light hover:bg-secondary-light hover:text-white-text hover:cursor-pointer'
+            >
+              {t('general.Sign_Up')}
+            </Button>
+          </Link>
+          <Link to='/login'>
+            <Button className='px-5 rounded-xl py-2 text-black-text bg-primary-light hover:bg-secondary-light hover:text-white-text hover:cursor-pointer'>
+              {t('general.Log_In')}
+            </Button>
+          </Link>
         </div>
       )}
     </div>
