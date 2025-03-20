@@ -9,8 +9,9 @@
         <version>1.0-SNAPSHOT</version>
 
     </parent>
-
+    <groupId>com.ooadproj</groupId>
     <artifactId>domain</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
@@ -30,7 +31,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>annotationProcessor</scope>
+            <version>1.18.28</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

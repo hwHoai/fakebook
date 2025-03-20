@@ -3,6 +3,8 @@ package com.ooadproj.domain.model.entity.user;
 import com.ooadproj.domain.model.entity.key.UserKeyTokenDomainEntity;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -10,6 +12,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.List;
 
+@Getter
+@Setter
 @Data
 @Entity
 @EntityScan
@@ -42,4 +46,59 @@ public class UserDomainEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
     private List<UserKeyTokenDomainEntity> keyTokenList;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public List<UserKeyTokenDomainEntity> getKeyTokenList() {
+        return keyTokenList;
+    }
+
+    public void setKeyTokenList(List<UserKeyTokenDomainEntity> keyTokenList) {
+        this.keyTokenList = keyTokenList;
+    }
 }
