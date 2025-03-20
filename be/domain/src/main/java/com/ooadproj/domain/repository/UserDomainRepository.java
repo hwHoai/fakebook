@@ -11,4 +11,5 @@ import java.util.List;
 public interface UserDomainRepository extends JpaRepository<UserDomainEntity, Long> {
 
     UserDomainEntity findByUserEmail(String userEmail);
+    UserDomainEntity save(UserDomainEntity userDomainEntity);
 }

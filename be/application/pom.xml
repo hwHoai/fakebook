@@ -8,8 +8,10 @@
         <artifactId>fakebook</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+    <groupId>com.ooadproj</groupId>
 
     <artifactId>application</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
@@ -28,6 +30,10 @@
             <groupId>com.ooadproj</groupId>
             <artifactId>infrastructure</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
         </dependency>
     </dependencies>
 

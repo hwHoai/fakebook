@@ -6,6 +6,8 @@ import com.ooadproj.domain.model.entity.key.JwtToken;
 import com.ooadproj.domain.model.entity.user.UserDomainEntity;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +31,14 @@ public class UserController {
 
     @PostAuthorize("permitAll()")
     @PostMapping("/register")
-    public JwtToken register(@RequestBody UserDomainEntity user) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, BadRequestException {
-        return userRegisterService.registerUser(user);
+    public ResponseEntity<JwtToken> registerUser(@RequestBody UserDomainEntity user) {
+        try {
+            JwtToken tokens = userRegisterService.registerUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(tokens);
+        } catch (Exception e) {
+            System.out.println("Error: " + user);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
 //    @GetMapping("/login")
