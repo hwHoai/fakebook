@@ -38,7 +38,7 @@ export const MediaUploader = ({ files, setFiles }) => {
       </label>
 
       {/* Hiển thị danh sách ảnh/video */}
-      <div className='grid grid-cols-3 gap-2 mt-2 max-h-56 overflow-y-auto'>
+      <div className='grid grid-cols-3 gap-2 mt-2 max-h-40 overflow-y-auto'>
         {files.map((file, index) => (
           <div key={index} className='relative cursor-pointer group'>
             {file.type === 'image' ? (

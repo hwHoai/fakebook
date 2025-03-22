@@ -7,7 +7,7 @@ import Lightbox from 'yet-another-react-lightbox';
 import Video from 'yet-another-react-lightbox/plugins/video';
 import 'yet-another-react-lightbox/styles.css';
 
-export const Post = ({ media }) => {
+export const Post = ({ media, onPostClick }) => {
   const { t } = useTranslation();
   const [liked, setLiked] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -29,7 +29,9 @@ export const Post = ({ media }) => {
           <img src='src/assets/img/test.jpg' alt='Avatar' className='w-10 h-10 rounded-full' />
           <div>
             <p className='font-bold'>Cat Babe</p>
-            <p className='text-sm text-gray-500'>2 {t('post.hours_ago')}</p>
+            <p onClick={onPostClick} className='text-sm cursor-pointer text-gray-500'>
+              2 {t('post.hours_ago')}
+            </p>
           </div>
         </div>
         <MoreHorizontal className='text-gray-500 cursor-pointer' />
@@ -99,7 +101,11 @@ export const Post = ({ media }) => {
           <span>114k {t('post.like')}</span>
         </Button>
 
-        <Button variant='ghost' className='flex items-center gap-2 text-gray-600 hover:text-purple-500 cursor-pointer'>
+        <Button
+          onClick={onPostClick}
+          variant='ghost'
+          className='flex items-center gap-2 text-gray-600 hover:text-purple-500 cursor-pointer'
+        >
           <MessageCircle className='w-5 h-5' />
           <span>1k {t('post.comment')}</span>
         </Button>
