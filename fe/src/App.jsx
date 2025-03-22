@@ -4,7 +4,7 @@ import { publicRoute } from './route/PublicRoute';
 
 export const App = () => {
   return (
-    <div className=''>
+    <div>
       <BrowserRouter>
         {
           <Routes>
