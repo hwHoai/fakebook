@@ -11,7 +11,7 @@ public class EmployeeNotFoundAdvice {
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String employeeNotFoundHandler(UserNotFoundException ex) {
+    String userNotFoundHandler(UserNotFoundException ex) {
         return ex.getMessage();
     }
 }

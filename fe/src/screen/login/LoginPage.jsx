@@ -1,13 +1,39 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { BRAND_NAME } from '../../constant/general';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { loginValidationSchema } from '../../validation/authValidaionSchema';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { Eye, EyeOff } from 'lucide-react';
 import login_background from '../../assets/img/login_background.png';
+import { UserAuthenticationService } from '../../service/user/auth/userAuthentication';
+import { CookieService } from '../../util/cookieService';
+import { TokenService } from '../../util/tokenService';
+import { AuthProvider } from '../../components/layout/provider/AuthProvider';
 
 export const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const loginContext = useContext(AuthProvider);
+
+  useEffect(() => {
+    if (loginContext.isAuth) {
+      navigate('/newfeed');
+    }
+  })
+  
+  const handleLogin = async (values, { setSubmitting }) => {
+    try {
+      const tokens = await UserAuthenticationService.login(values);
+      for(const key in tokens) {
+        const tokenPayload = TokenService.decodeToken(tokens[key]);
+        const tokenExpire = new Date(tokenPayload.exp)
+        CookieService.setCookie(key, tokens[key], tokenExpire);
+      }
+      navigate('/');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div
@@ -38,18 +64,15 @@ export const LoginPage = () => {
       <div className='flex flex-col w-[60%] items-center justify-center min-h-screen '>
         <div className='w-110'>
           <h2 className='text-5xl font-bold text-gray-800'>Hello There</h2>
-          <p className='text-gray-600 text-base mt-2'>It's great to have you here.</p>
+          <p className='text-gray-600 text-base mt-2'>It&apos;s great to have you here.</p>
           <p className='text-gray-600 text-base mt-1'>Log in to your account to continue!</p>
         </div>
         <div className='bg-white mt-6 p-6 rounded-lg shadow-lg w-110'>
           <Formik
-            initialValues={{ email: '', password: '' }}
+            initialValues={{ userEmail: '', password: '' }}
             validationSchema={loginValidationSchema}
             onSubmit={(values, { setSubmitting }) => {
-              console.log('Form data', values);
-              setTimeout(() => {
-                setSubmitting(false);
-              }, 1000);
+              handleLogin(values, { setSubmitting });
             }}
           >
             {({ isSubmitting }) => (
@@ -58,11 +81,11 @@ export const LoginPage = () => {
                   <Field
                     autoComplete='new-password'
                     type='text'
-                    name='email'
+                    name='userEmail'
                     placeholder='Email address or phone number'
                     className='w-full px-3 py-4 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500'
                   />
-                  <ErrorMessage name='email' component='div' className='text-red-500 text-sm pl-3 mt-2' />
+                  <ErrorMessage name='userEmail' component='div' className='text-red-500 text-sm pl-3 mt-2' />
                 </div>
                 <div className='mb-2 relative'>
                   <Field
