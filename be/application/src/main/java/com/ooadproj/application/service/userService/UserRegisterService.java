@@ -1,12 +1,13 @@
 package com.ooadproj.application.service.userService;
 
-import com.ooadproj.domain.model.entity.key.JwtToken;
-import com.ooadproj.domain.model.entity.key.UserKeyTokenDomainEntity;
-import com.ooadproj.domain.model.entity.user.UserDomainEntity;
-import com.ooadproj.domain.repository.UserDomainRepository;
-import com.ooadproj.domain.repository.UserKeyTokenDomainRepository;
+import com.ooadproj.domain.model.key.JwtToken;
+import com.ooadproj.domain.model.entity.key.AuthenticationKeyEntity;
+import com.ooadproj.domain.model.entity.user.UserEntity;
+import com.ooadproj.domain.repository.user.UserEntityRepository;
+import com.ooadproj.domain.repository.key.AuthenticationKeyEntityRepository;
+import com.ooadproj.infracstructure.persistence.repository.key.JwtTokenServiceImpl;
+import com.ooadproj.infracstructure.persistence.repository.key.RSAKeyPairServiceImpl;
 import jakarta.persistence.EntityExistsException;
-import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,63 +21,52 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Base64;
 import java.util.List;
 
 @Service
 public class UserRegisterService {
     @Autowired
-    private UserDomainRepository userDomainRepository;
+    private UserEntityRepository userEntityRepository;
 
     @Autowired
-    private UserKeyTokenDomainRepository userKeyTokenDomainRepository;
+    private AuthenticationKeyEntityRepository authenticationKeyEntityRepository;
 
-    public JwtToken registerUser(UserDomainEntity user) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, BadRequestException {
-        System.out.println("Registering user: " + user);
-        if(user == null) {
-            throw new BadRequestException("User cannot be null");
-        }
+    public JwtToken registerUser(UserEntity user) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, BadRequestException {
         // Check if user email already exists
-        UserDomainEntity isUserEmailExists = userDomainRepository.findByUserEmail(user.getUserEmail());
-        if (isUserEmailExists != null) {
-            throw new EntityExistsException("User with email " + user.getUserEmail() + " already exists");
+        String userEmail = user.getUserEmail();
+        if (userEntityRepository.existsByUserEmail(userEmail)) {
+            throw new EntityExistsException("User with email " + userEmail + " already exists");
         }
 
         //Hash the password
-        BCryptPasswordEncoder PasswordEncoder = new BCryptPasswordEncoder(16);
-        String hashedPass = PasswordEncoder.encode(user.getPassword());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(16);
+        String hashedPass = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPass);
 
         // Save user
         new Thread(() -> {
-            userDomainRepository.save(user);
+            userEntityRepository.save(user);
         }).start();
 
         // Generate public and private key pair
-        KeyPair keyPair =  UserAuthenticationService.generateKeyPair();
-        String publicKey = Base64.getMimeEncoder().encodeToString( keyPair.getPublic().getEncoded());
-        String privateKey = Base64.getMimeEncoder().encodeToString( keyPair.getPrivate().getEncoded());
-        System.out.println("----------Private Key------------- \n " + publicKey);
-        System.out.println("----------Public Key--------------- \n" + privateKey);
+        RSAKeyPairServiceImpl rsaKeyPairService = new RSAKeyPairServiceImpl();
+        KeyPair keyPair =  rsaKeyPairService.generateKeyPair();
+        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
 
         // Generate token
-        JwtToken tokens = UserAuthenticationService.generateToken((RSAPublicKey) keyPair.getPublic(), (RSAPrivateKey) keyPair.getPrivate(), user.getUserEmail());
-        System.out.println("----------Access Token------------- \n " + tokens.getAccessToken());
-        System.out.println("----------Refresh Token------------- \n " + tokens.getRefreshToken());
+        JwtTokenServiceImpl jwtTokenService = new JwtTokenServiceImpl();
+        JwtToken tokens = jwtTokenService.generateToken(publicKey, privateKey, userEmail);
 
         // Save token
-        UserKeyTokenDomainEntity userKeyTokenDomainEntity = new UserKeyTokenDomainEntity();
-        userKeyTokenDomainEntity.setPublicKey(publicKey);
-        userKeyTokenDomainEntity.setRefreshToken(tokens.getRefreshToken());
-        userKeyTokenDomainEntity.setUser(user);
+        AuthenticationKeyEntity authenticationKeyEntity = new AuthenticationKeyEntity();
+        authenticationKeyEntity.setPublicKey(rsaKeyPairService.toPublicKeyString(publicKey));
+        authenticationKeyEntity.setRefreshToken(tokens.getRefreshToken());
+        authenticationKeyEntity.setUser(user);
 
         // Save user & token
-        userKeyTokenDomainRepository.save(userKeyTokenDomainEntity);
+        authenticationKeyEntityRepository.save(authenticationKeyEntity);
 
         return tokens;
-    }
-
-    public List<UserDomainEntity> findAll() {
-        return userDomainRepository.findAll();
     }
 }

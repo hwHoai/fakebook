@@ -1,17 +1,13 @@
 package com.ooadproj.domain.model.entity.key;
 
-import com.ooadproj.domain.model.entity.user.UserDomainEntity;
+import com.ooadproj.domain.model.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@Getter
-@Setter
 @Data
 @Entity
 @EntityScan
@@ -19,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Table(name = "user_key_token")
 @DynamicInsert
 @DynamicUpdate
-public class UserKeyTokenDomainEntity{
+public class AuthenticationKeyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "keyId")
@@ -31,9 +27,9 @@ public class UserKeyTokenDomainEntity{
     @Column(columnDefinition = "TEXT")
     private String refreshToken;
 
-    @ManyToOne(cascade = CascadeType.DETACH, targetEntity = UserDomainEntity.class)
+    @ManyToOne(cascade = CascadeType.DETACH, targetEntity = UserEntity.class)
     @JoinColumn(name = "user_id")
-    private UserDomainEntity user;
+    private UserEntity user;
 
     public Long getId() {
         return id;
@@ -59,11 +55,11 @@ public class UserKeyTokenDomainEntity{
         this.refreshToken = refreshToken;
     }
 
-    public UserDomainEntity getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(UserDomainEntity user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 }

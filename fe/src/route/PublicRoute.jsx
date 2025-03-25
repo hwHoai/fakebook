@@ -4,11 +4,11 @@ import { LoginPage } from '../screen/login/LoginPage';
 import { RegisterPage } from '../screen/register/RegisterPage';
 
 export const publicRoute = [
-  {
-    id: 'newfeed',
-    path: ROUTE_PATH.NEW_FEED,
+  { 
+    id: 'default_page',
+    path: ROUTE_PATH.HOME,
     element: <NewFeedPage />,
-    index: true
+    index: true 
   },
   {
     id: 'register',

@@ -1,13 +1,9 @@
-package com.ooadproj.domain.model.entity.key;
+package com.ooadproj.domain.model.key;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @Data
-@Getter
-@Setter
 @EntityScan
 public class JwtToken {
     private String refreshToken;

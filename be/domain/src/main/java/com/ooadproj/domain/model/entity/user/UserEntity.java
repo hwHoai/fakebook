@@ -1,10 +1,8 @@
 package com.ooadproj.domain.model.entity.user;
 
-import com.ooadproj.domain.model.entity.key.UserKeyTokenDomainEntity;
+import com.ooadproj.domain.model.entity.key.AuthenticationKeyEntity;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -12,8 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.List;
 
-@Getter
-@Setter
 @Data
 @Entity
 @EntityScan
@@ -21,7 +17,7 @@ import java.util.List;
 @Table(name = "user_info")
 @DynamicInsert
 @DynamicUpdate
-public class UserDomainEntity {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +40,7 @@ public class UserDomainEntity {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
-    private List<UserKeyTokenDomainEntity> keyTokenList;
+    private List<AuthenticationKeyEntity> keyTokenList;
 
     public Long getId() {
         return id;
@@ -94,11 +90,11 @@ public class UserDomainEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<UserKeyTokenDomainEntity> getKeyTokenList() {
+    public List<AuthenticationKeyEntity> getKeyTokenList() {
         return keyTokenList;
     }
 
-    public void setKeyTokenList(List<UserKeyTokenDomainEntity> keyTokenList) {
+    public void setKeyTokenList(List<AuthenticationKeyEntity> keyTokenList) {
         this.keyTokenList = keyTokenList;
     }
 }
