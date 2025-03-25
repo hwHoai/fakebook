@@ -98,14 +98,14 @@
 }
 
 @theme {
-  --color-primary-light: #F3ECFE;
+  --color-primary-light: #f3ecfe;
   --color-secondary-light: #7940ed;
   --color-destructive-light: #dc143c;
   --color-accent-light: #33284a;
-  --color-background-paper: #F3F4F6;
-  --color-background-default: #FAFAFA;
-  --color-black-text: #2E2E2E;
-  --color-white-text: #FAFAFA;
+  --color-background-paper: #f3f4f6;
+  --color-background-default: #fafafa;
+  --color-black-text: #2e2e2e;
+  --color-white-text: #fafafa;
   --color-divided-line: #464646;
 }
 

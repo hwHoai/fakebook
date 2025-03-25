@@ -62,8 +62,8 @@ export const PostUpload = ({ isOpen, onClose }) => {
           <MediaUploader files={files} setFiles={setFiles} />
         </div>
 
-        <div className='flex justify-between p-2 border-t'>
-          <Button className='bg-[#7940ed] w-full ml-2 text-sm' disabled={isPostDisabled}>
+        <div className='flex items-center justify-between p-2 pb-0 border-t'>
+          <Button className='bg-[#7940ed] w-full  text-sm' disabled={isPostDisabled}>
             {t('button.post')}
           </Button>
         </div>
