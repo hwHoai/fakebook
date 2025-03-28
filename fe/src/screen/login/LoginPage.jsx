@@ -19,14 +19,15 @@ export const LoginPage = () => {
     if (loginContext.isAuth) {
       navigate('/newfeed');
     }
-  })
-  
+  });
+
   const handleLogin = async (values, { setSubmitting }) => {
     try {
       const tokens = await UserAuthenticationService.login(values);
-      for(const key in tokens) {
+      console.log(tokens);
+      for (const key in tokens) {
         const tokenPayload = TokenService.decodeToken(tokens[key]);
-        const tokenExpire = new Date(tokenPayload.exp)
+        const tokenExpire = new Date(tokenPayload.exp);
         CookieService.setCookie(key, tokens[key], tokenExpire);
       }
       navigate('/');
