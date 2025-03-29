@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { MediaUploader } from './MediaUploader';
+import { MediaUploader } from '../common/MediaUploader';
 import { useTranslation } from 'react-i18next';
 
 export const PostUpload = ({ isOpen, onClose }) => {
