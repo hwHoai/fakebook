@@ -1,7 +1,7 @@
-import { Post } from './Post';
+import { Post } from '../common/Post';
 import { X } from 'lucide-react';
-import { CommentBox } from './CommentBox';
-import { Comment } from './Comment';
+import { CommentBox } from '../common/CommentBox';
+import { Comment } from '../common/Comment';
 
 export const PostDetail = ({ post, onClosePostDetail }) => {
   const comments = [

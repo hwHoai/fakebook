@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Video } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { PostUpload } from './PostUpload';
+import { PostUpload } from '../popup/PostUpload';
 
 export const PostBox = () => {
   const { t } = useTranslation();
