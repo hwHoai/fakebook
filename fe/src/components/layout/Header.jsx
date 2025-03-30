@@ -3,19 +3,26 @@ import icon from '../../assets/img/icon.webp';
 import { BRAND_NAME } from '../../constant/general';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 import { Search, MessageSquare, Bell, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { CookieService } from '../../util/cookieService';
+import { UserMenu } from '../popup/UserMenu';
 export const Header = () => {
   const [searchValue, setSearchValue] = useState('');
   const [isLogin, setIsLogin] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { t } = useTranslation();
+  const profileButtonRef = useRef(null);
 
   const handleSearch = (e) => {
     e.preventDefault();
     setSearchValue('');
     console.log(searchValue);
+  };
+
+  const handleLogout = () => {
+    setIsLogin(false);
   };
 
   useEffect(() => {
@@ -79,9 +86,21 @@ export const Header = () => {
           </div>
 
           {/* Profile Button */}
-          <div className='relative cursor-pointer w-11 h-11'>
+          <div
+            ref={profileButtonRef}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent the click from propagating to the document
+              setIsUserMenuOpen((prev) => !prev); // Toggle the menu
+            }}
+            className='relative cursor-pointer w-11 h-11'
+          >
             <img src='src/assets/img/test.jpg' alt='Profile' className='w-full h-full rounded-full object-cover' />
             <ChevronDown className='absolute bottom-1 right-0 translate-x-1/3 bg-gray-100 p-1 rounded-full shadow-md w-5 h-5 text-gray-700' />
+            <UserMenu
+              isOpen={isUserMenuOpen}
+              onClose={() => setIsUserMenuOpen(false)}
+              profileButtonRef={profileButtonRef}
+            />
           </div>
         </div>
       ) : (

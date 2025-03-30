@@ -1,5 +1,5 @@
 export class CookieService {
-  static setCookie = (name, value = '', expire ,path='/') => {
+  static setCookie = (name, value = '', expire, path = '/') => {
     document.cookie = `${name}=${value}; expires=${expire}; path=${path}`;
   };
 
@@ -11,6 +11,10 @@ export class CookieService {
         return decodeURIComponent(cookieValue);
       }
     }
-    return undefined; 
-  }
+    return undefined;
+  };
+
+  static removeCookie = (name, path = '/') => {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}`;
+  };
 }
