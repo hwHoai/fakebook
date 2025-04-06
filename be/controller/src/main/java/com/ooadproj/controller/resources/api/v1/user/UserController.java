@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.NoSuchAlgorithmException;
 
 @Controller
@@ -28,6 +27,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<JwtToken> registerUser(@RequestBody UserEntity user) {
         try {
+
             JwtToken tokens = userRegisterService.registerUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(tokens);
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class UserController {
     public ResponseEntity<JwtToken> loginByEmail(@RequestBody LoginReqBody loginInfo) throws NoSuchAlgorithmException {
         try {
             JwtToken tokens = userLoginService.loginByEmail(loginInfo.getUserEmail(), loginInfo.getPassword());
-            System.out.println("OK");
+
             return ResponseEntity.status(HttpStatus.OK).body(tokens);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
