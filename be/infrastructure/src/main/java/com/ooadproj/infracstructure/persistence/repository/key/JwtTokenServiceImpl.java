@@ -19,29 +19,37 @@ import java.util.HashMap;
 public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
-    public JwtToken generateToken(RSAPublicKey publicKey, RSAPrivateKey privateKey, String userEmail, long userId) {
+    public JwtToken generateToken(RSAPublicKey publicKey, RSAPrivateKey privateKey, Long userId, String userEmail) {
         try {
             Algorithm signAlgorithm = Algorithm.RSA256(privateKey);
             long currentTime = System.currentTimeMillis();
+
+            // Generate Access Token
             String accessToken = JWT.create()
                     .withIssuer("auth0")
-                    .withExpiresAt(Instant.ofEpochSecond(currentTime + 900000)) // 15 minutes
-                    .withPayload(new HashMap<String, String>( ){{put("userEmail", userEmail); put("userId", String.valueOf(userId));}})
+                    .withExpiresAt(Instant.ofEpochMilli(currentTime + 900000)) // 15 minutes
+                    .withClaim("userId", userId)
+                    .withClaim("userEmail", userEmail)
                     .sign(signAlgorithm);
+
+            // Generate Refresh Token
             String refreshToken = JWT.create()
                     .withIssuer("auth0")
-                    .withPayload(new HashMap<String, String>( ){{put("userEmail", userEmail); put("userId", String.valueOf(userId));}})
-                    .withExpiresAt(Instant.ofEpochSecond(currentTime + 259200000)) // 3 days
+                    .withExpiresAt(Instant.ofEpochMilli(currentTime + 259200000)) // 3 days
+                    .withClaim("userId", userId)
+                    .withClaim("userEmail", userEmail)
                     .sign(signAlgorithm);
-            System.out.println(currentTime + 900000);
-            System.out.println(currentTime + 259200000);
+
+            // Verify the Access Token
             if (verifyToken(publicKey, accessToken) == null) {
                 throw new JWTVerificationException("Access token is invalid");
             }
+
             System.out.println("----------Access Token------------- \n " + accessToken);
             System.out.println("----------Refresh Token------------- \n " + refreshToken);
+
             return new JwtToken(refreshToken, accessToken);
-        } catch (JWTVerificationException exception){
+        } catch (JWTVerificationException exception) {
             throw new JWTVerificationException("Access token is invalid");
         }
     }
@@ -52,9 +60,15 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             DecodedJWT isTokenValid = JWT.require(verifyAlgorithm)
                     .build()
                     .verify(token);
+            System.out.println("Token verified successfully: " + isTokenValid);
             return isTokenValid;
         } catch (JWTVerificationException exception){
+            System.out.println("JWT verification error: " + exception.getMessage());
             throw new JWTVerificationException("Access token is invalid");
         }
+    }
+
+    public DecodedJWT decodeToken(String token) {
+        return JWT.decode(token);
     }
 }

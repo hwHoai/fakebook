@@ -46,7 +46,7 @@ public class UserLoginService {
 
         // Generate token
         JwtTokenServiceImpl jwtTokenService = new JwtTokenServiceImpl();
-        JwtToken tokens =  jwtTokenService.generateToken(publicKey, privateKey, user.getUserEmail(), user.getId());
+        JwtToken tokens =  jwtTokenService.generateToken(publicKey, privateKey, user.getUserEmail());
         System.out.println((tokens.getAccessToken()));
 
         //Update key in database

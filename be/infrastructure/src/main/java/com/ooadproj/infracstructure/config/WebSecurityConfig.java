@@ -1,5 +1,6 @@
 package com.ooadproj.infracstructure.config;
 
+import com.ooadproj.infracstructure.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,18 +24,25 @@ import java.util.Arrays;
 @EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public WebSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/api/v1/message/**").authenticated()
                         .requestMatchers("/**").anonymous()
                         .requestMatchers(HttpMethod.POST, "/**").anonymous()
-                        .anyRequest().authenticated()
+
                 )
                 .securityMatcher("/api/v1/**")
-//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors( cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable());
+                .csrf(csrf -> csrf.disable())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

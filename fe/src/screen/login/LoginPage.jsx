@@ -23,11 +23,12 @@ export const LoginPage = () => {
 
   const handleLogin = async (values, { setSubmitting }) => {
     try {
+      console.log(values);
       const tokens = await UserAuthenticationService.login(values);
       console.log(tokens);
       for (const key in tokens) {
         const tokenPayload = TokenService.decodeToken(tokens[key]);
-        const tokenExpire = new Date(tokenPayload.exp);
+        const tokenExpire = new Date(tokenPayload.exp * 1000);
         CookieService.setCookie(key, tokens[key], tokenExpire);
       }
       navigate('/');

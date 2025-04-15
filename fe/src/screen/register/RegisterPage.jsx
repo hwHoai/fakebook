@@ -94,7 +94,7 @@ export const RegisterPage = () => {
                     placeholder='Enter your email address'
                     className='w-full p-2 border-1 border-accent-light rounded'
                   />
-                  <ErrorMessage name='email' component='div' className='text-red-500 text-sm mt-2' />
+                  <ErrorMessage name='userEmail' component='div' className='text-red-500 text-sm mt-2' />
                 </div>
 
                 <div className='flex flex-col w-[calc(50%+1rem)]'>

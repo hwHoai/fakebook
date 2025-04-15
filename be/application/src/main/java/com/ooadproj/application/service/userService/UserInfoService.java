@@ -10,6 +10,10 @@ public class UserInfoService {
     @Autowired
     private UserEntityRepository userEntityRepository;
 
+    public String getUsernameById(Long id) {
+        return userEntityRepository.findById(id)
+                .map(user -> user.getFirstName() + " " + user.getLastName())
+                .orElse(null);
     public UserPublicInfo getUserInfoById(long id) {
         try {
             System.out.println(userEntityRepository.findById(id));
