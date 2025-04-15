@@ -1,5 +1,6 @@
 package com.ooadproj.domain.repository.user;
 
+import com.ooadproj.domain.model.dto.res.UserPublicInfo;
 import com.ooadproj.domain.model.entity.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,6 +17,7 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByUserEmail(String userEmail);
     boolean existsByPhoneNumber(String phoneNumber);
     boolean existsByUserEmail(String userEmail);
+    UserPublicInfo findById(long userId);
 
     // UPDATE
     @Modifying

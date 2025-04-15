@@ -45,6 +45,7 @@ public class UserRegisterService {
 
         // Save user
         new Thread(() -> {
+            user.setAvatar("men_default_avatar.JPG");
             userEntityRepository.save(user);
         }).start();
 
@@ -56,7 +57,7 @@ public class UserRegisterService {
 
         // Generate token
         JwtTokenServiceImpl jwtTokenService = new JwtTokenServiceImpl();
-        JwtToken tokens = jwtTokenService.generateToken(publicKey, privateKey, userEmail);
+        JwtToken tokens = jwtTokenService.generateToken(publicKey, privateKey, userEmail, user.getId());
 
         // Save token
         AuthenticationKeyEntity authenticationKeyEntity = new AuthenticationKeyEntity();

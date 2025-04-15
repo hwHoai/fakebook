@@ -7,33 +7,33 @@ import { UserAuthenticationService } from '../../service/user/auth/userAuthentic
 import { TokenService } from '../../util/tokenService';
 import { CookieService } from '../../util/cookieService';
 import { useContext, useEffect } from 'react';
-import { AuthProvider } from '../../components/layout/provider/AuthProvider';
+import { AuthProvider } from '../../components/layout/provider/provider';
 
 export const RegisterPage = () => {
-const navigate = useNavigate();
-const loginContext = useContext(AuthProvider);
+  const navigate = useNavigate();
+  const loginContext = useContext(AuthProvider);
 
-useEffect(() => {
-  if (loginContext.isAuth) {
-    navigate('/newfeed');
-  }
-});
-
-const handleRegisterUser = async (values, { setSubmitting }) => {
-  try {
-    console.log(values);
-    const tokens = await UserAuthenticationService.signUp(values);
-    console.log(tokens);
-    for (const key in tokens) {
-      const tokenPayload = TokenService.decodeToken(tokens[key]);
-      const tokenExpire = new Date(tokenPayload.exp);
-      CookieService.setCookie(key, tokens[key], tokenExpire);
+  useEffect(() => {
+    if (loginContext.isAuth) {
+      navigate('/newfeed');
     }
-    navigate('/');
-  } finally {
-    setSubmitting(false);
-  }
-};
+  });
+
+  const handleRegisterUser = async (values, { setSubmitting }) => {
+    try {
+      console.log(values);
+      const tokens = await UserAuthenticationService.signUp(values);
+      console.log(tokens);
+      for (const key in tokens) {
+        const tokenPayload = TokenService.decodeToken(tokens[key]);
+        const tokenExpire = new Date(tokenPayload.exp);
+        CookieService.setCookie(key, tokens[key], tokenExpire);
+      }
+      navigate('/');
+    } finally {
+      setSubmitting(false);
+    }
+  };
   return (
     <div
       className='flex h-screen w-full min-w-[900px] min-h-[500px] overflow-auto'

@@ -7,6 +7,6 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 public interface JwtTokenService {
-    JwtToken generateToken(RSAPublicKey publicKey, RSAPrivateKey privateKey, String userEmail);
+    JwtToken generateToken(RSAPublicKey publicKey, RSAPrivateKey privateKey, String userEmail, long userId);
     DecodedJWT verifyToken(RSAPublicKey publicKey, String token);
 }

@@ -8,7 +8,7 @@ import login_background from '../../assets/img/login_background.png';
 import { UserAuthenticationService } from '../../service/user/auth/userAuthentication';
 import { CookieService } from '../../util/cookieService';
 import { TokenService } from '../../util/tokenService';
-import { AuthProvider } from '../../components/layout/provider/AuthProvider';
+import { AuthProvider } from '../../components/layout/provider/provider';
 
 export const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);

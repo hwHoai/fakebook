@@ -1,10 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { Header } from '../../components/layout/Header';
 import { Post } from '../../components/common/Post.jsx';
 import { PostBox } from '../../components/common/PostBox.jsx';
 import { SidebarRight } from '../../components/layout/SidebarRight.jsx';
 import { SidebarLeft } from '../../components/layout/SidebarLeft.jsx';
 import { PostDetail } from '../../components/popup/PostDetail.jsx';
+import { DEFAULT_AVATAR_URL } from '../../constant/general.js';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { firebaseStorage } from '../../config/firebaseStorage.js';
+import { UserInforReducer } from '../../redux/reducerStore.js';
 
 export const NewFeedPage = () => {
   const [showPostDetail, setShowPostDetail] = useState(false);
