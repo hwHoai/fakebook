@@ -1,9 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { Card } from '../ui/Card';
 import { CookieService } from '../../util/cookieService';
+import { UserInfoProvider } from '../layout/provider/provider';
 
 export const UserMenu = ({ isOpen, onClose, profileButtonRef }) => {
   const menuRef = useRef(null);
+    const { userAvatarUrl, userName } = useContext(UserInfoProvider);
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -38,8 +41,8 @@ export const UserMenu = ({ isOpen, onClose, profileButtonRef }) => {
     <Card ref={menuRef} className='absolute right-0 top-12 w-65 p-2 rounded-lg z-50'>
       <ul className=''>
         <li className='px-2 border-b-2 flex items-center rounded-lg py-2 hover:bg-gray-100 cursor-pointer'>
-          <img src='src/assets/img/test.jpg' alt='User Avatar' className='w-7 h-7 rounded-full mr-2' />
-          <span className='text-sm font-semibold'>Nam Hoàng</span>
+          <img src={userAvatarUrl} alt='User Avatar' className='w-7 h-7 rounded-full mr-2' />
+          <span className='text-sm font-semibold'>{userName}</span>
         </li>
         <li className='px-2 rounded-lg py-2 hover:bg-gray-100 cursor-pointer'>Settings</li>
         <li onClick={handleLogout} className='px-2 rounded-lg py-2 hover:bg-gray-100 cursor-pointer'>

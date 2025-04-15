@@ -2,9 +2,9 @@ import { Routes, Route, BrowserRouter } from 'react-router';
 import { privateRoute } from './route/PrivateRoute';
 import { publicRoute } from './route/PublicRoute';
 import { useEffect, useReducer, useState } from 'react';
-import { AuthProvider } from './components/layout/provider/provider';
+import { AuthProvider, UserInfoProvider } from './components/layout/provider/provider';
 import { CookieService } from './util/cookieService';
-import { UserInforReducer } from './redux/reducerStore';
+import { UserInfoReducer } from './redux/reducerStore';
 import { DEFAULT_AVATAR_FILENAME, DEFAULT_AVATAR_URL } from './constant/general';
 import { firebaseStorage } from './config/firebaseStorage';
 import { getDownloadURL, ref } from 'firebase/storage';
@@ -12,78 +12,76 @@ import { TokenService } from './util/tokenService';
 import { UserInforService } from './service/user/userInforService';
 
 const App = () => {
-  const [isAuth, setIsAuth] = useState();
-  const [{ userAvatar, userName }, dispatch] = useReducer(
-    UserInforReducer,
+  const [isAuth, setIsAuth] = useState(false);
+  const [userPublicInfo, dispatch] = useReducer(
+    UserInfoReducer,
     {
       userName: '',
       userEmail: '',
-      phoneNumber: '',   
+      phoneNumber: '',
       userAvatar: DEFAULT_AVATAR_FILENAME,
-      userAvatarUrl: DEFAULT_AVATAR_URL,
-    },
-    (state) => {
-      return { ...state };
+      userAvatarUrl: DEFAULT_AVATAR_URL
     }
   );
-  
+
   useEffect(() => {
     const authToken = CookieService.getCookie('accessToken');
-    setIsAuth(authToken);
-    
-    if(isAuth) {
-      const {userId} = TokenService.decodeToken(authToken);
-      console.log('authTokenPayload', userId);
+    setIsAuth(!!authToken);
+    console.log('isAuth', isAuth);	
+    if (isAuth) {
+      const { userId } = TokenService.decodeToken(authToken);
 
       //get user info from server
-      const userInfo = UserInforService.getPublicUserInfo(userId);
-      userInfo.then((res) => {
-        console.log('userInfo', res);
-        // if (res.status === 200) {
-        //   const data = res.data.data;
-        //   dispatch({
-        //     type: 'SET_USER',
-        //     payload: {
-        //       userAvatar: data.avatar,
-        //       userName: data.name,
-        //       userEmail: data.email,
-        //       phoneNumber: data.phoneNumber,
-        //     }
-        //   });
-        // }
+      const request = UserInforService.getPublicUserInfo(userId);
+      request.then((userInfo) => {
+        if (userInfo) {
+          console.log('userInfo', userInfo.userName);
+          dispatch({
+            type: 'SET_USER_INFO',
+            payload: {
+              userAvatar: userInfo.userProfileImage,
+              userName: userInfo.userName,
+              userEmail: userInfo.userEmail,
+              phoneNumber: userInfo.phoneNumber
+            }
+          });
+        }
       });
       //get user avatar
-      const avatarRef = ref(firebaseStorage, userAvatar);
+      const avatarRef = ref(firebaseStorage, userPublicInfo.userAvatar);
       getDownloadURL(avatarRef).then((url) => {
         dispatch({
-          type: 'SET_USER_AVATAR',
+          type: 'SET_USER_AVATAR_URL',
           payload: {
-            userAvatar: url
+            userAvatarUrl: url
           }
         });
       });
     }
-  }, [isAuth, userAvatar]);
+  }, [isAuth, userPublicInfo.userAvatar]);
+  console.log('userAvatarUrl', userPublicInfo.userAvatarUrl);
   return (
     <AuthProvider.Provider value={{ isAuth, setIsAuth }}>
-      <BrowserRouter>
-        {
-          <Routes>
-            {publicRoute.map((route, i) => (
-              <Route key={i} {...route} />
-            ))}
-          </Routes>
-        }
-        {isAuth ? (
-          <Routes>
-            {privateRoute.map((route, i) => (
-              <Route key={i} {...route} />
-            ))}
-          </Routes>
-        ) : (
-          <></>
-        )}
-      </BrowserRouter>
+      <UserInfoProvider.Provider value={userPublicInfo}>
+        <BrowserRouter>
+          {
+            <Routes>
+              {publicRoute.map((route, i) => (
+                <Route key={i} {...route} />
+              ))}
+            </Routes>
+          }
+          {isAuth ? (
+            <Routes>
+              {privateRoute.map((route, i) => (
+                <Route key={i} {...route} />
+              ))}
+            </Routes>
+          ) : (
+            <></>
+          )}
+        </BrowserRouter>
+      </UserInfoProvider.Provider>
     </AuthProvider.Provider>
   );
 };

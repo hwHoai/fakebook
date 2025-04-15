@@ -5,12 +5,9 @@ const token = CookieService.getCookie('accessToken');
 export class UserInforService {
   static getPublicUserInfo = (userId) => {
     return request({
-      url: `user/`,
+      url: `user/info/${userId}`,
       method: 'get',
       Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` },
-      params: {
-        userId: userId
-      }
     });
   };
 }

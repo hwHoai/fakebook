@@ -8,6 +8,7 @@ import com.ooadproj.domain.model.dto.res.UserPublicInfo;
 import com.ooadproj.domain.model.key.JwtToken;
 import com.ooadproj.domain.model.entity.user.UserEntity;
 import jakarta.annotation.security.PermitAll;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.security.NoSuchAlgorithmException;
 
-@Controller
+//@Controller
 @RestController
+@Slf4j
 @RequestMapping("/api/v1/user")
 public class UserController {
 
@@ -54,11 +56,11 @@ public class UserController {
         }
     }
 
-    @PostAuthorize("isAuthenticated()")
-    @GetMapping("/")
-    public ResponseEntity<UserPublicInfo> getUserPublicInfo(@RequestParam(name="userId") String userId) throws NoSuchAlgorithmException {
+    @GetMapping("/info/{userId}")
+    public ResponseEntity<UserPublicInfo> getUserPublicInfo(@PathVariable("userId") String userId) throws NoSuchAlgorithmException {
         try {
             Long id = Long.parseLong(userId);
+            System.out.println(id);
             UserPublicInfo user = userInfoService.getUserInfoById(id);
             return ResponseEntity.status(HttpStatus.OK).body(user);
         } catch (Exception e) {

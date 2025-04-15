@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MediaUploader } from '../common/MediaUploader';
 import { useTranslation } from 'react-i18next';
+import { UserInfoProvider } from '../layout/provider/provider';
 
 export const PostUpload = ({ isOpen, onClose }) => {
   const [content, setContent] = useState(''); // Trạng thái nội dung bài viết
   const [files, setFiles] = useState([]);
   const { t } = useTranslation();
+  const { userAvatarUrl } = useContext(UserInfoProvider);
 
   if (!isOpen) return null;
 
@@ -45,7 +47,7 @@ export const PostUpload = ({ isOpen, onClose }) => {
         </div>
         <CardContent className='py-4'>
           <div className='flex items-center gap-3'>
-            <img src='src/assets/img/test.jpg' alt='User Avatar' className='w-10 h-10 rounded-full' />
+            <img src={userAvatarUrl} alt='User Avatar' className='w-10 h-10 rounded-full' />
             <div>
               <p className='font-medium text-base'>Nam Hoàng</p>
             </div>

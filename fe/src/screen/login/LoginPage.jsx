@@ -17,7 +17,7 @@ export const LoginPage = () => {
 
   useEffect(() => {
     if (loginContext.isAuth) {
-      navigate('/newfeed');
+      navigate('/');
     }
   });
 
@@ -31,6 +31,7 @@ export const LoginPage = () => {
         const tokenExpire = new Date(tokenPayload.exp * 1000);
         CookieService.setCookie(key, tokens[key], tokenExpire);
       }
+      loginContext.setIsAuth(true);
       navigate('/');
     } finally {
       setSubmitting(false);
