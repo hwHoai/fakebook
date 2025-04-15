@@ -38,13 +38,11 @@ export const Test = () => {
   };
 
   const sendMessage = () => {
-    if (client && name && message) {
-      client.publish({
-        destination: '/app/chat',
-        body: JSON.stringify({ sender: name, receiver: 'all', content: message })
-      });
-      setMessage('');
-    }
+    client.publish({
+      destination: '/app/chat',
+      body: JSON.stringify({ senderId: 2, receiverId: 1, content: message })
+    });
+    setMessage('');
   };
 
   return (

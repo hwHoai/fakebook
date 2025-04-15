@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.ooadproj.domain.model.entity.user.UserEntity;
 
 
 import java.time.LocalDateTime;
@@ -16,14 +17,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "message_id")
+    private Long messageId;
 
-    private String sender;
-    private String receiver;
+    @ManyToOne
+    @JoinColumn(name = "sender_id", referencedColumnName = "user_id")
+    private UserEntity sender;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_id", referencedColumnName = "user_id")
+    private UserEntity receiver;
+
     private String content;
-    private LocalDateTime timestamp;
-
-
+    private LocalDateTime createdAt;
+    private Boolean isRead;
 }

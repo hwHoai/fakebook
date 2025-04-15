@@ -56,7 +56,7 @@ public class UserRegisterService {
 
         // Generate token
         JwtTokenServiceImpl jwtTokenService = new JwtTokenServiceImpl();
-        JwtToken tokens = jwtTokenService.generateToken(publicKey, privateKey, userEmail);
+        JwtToken tokens = jwtTokenService.generateToken(publicKey, privateKey, user.getId(),userEmail);
 
         // Save token
         AuthenticationKeyEntity authenticationKeyEntity = new AuthenticationKeyEntity();
