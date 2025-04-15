@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { registerValidationSchema } from '../../validation/authValidaionSchema';
 import { BRAND_NAME } from '../../constant/general';
 import register_background from '../../assets/img/register_background.png';
+import { UserAuthenticationService } from '../../service/user/auth/userAuthentication';
 
 export const RegisterPage = () => {
   return (
@@ -24,13 +25,11 @@ export const RegisterPage = () => {
         </p>
 
         <Formik
-          initialValues={{ firstName: '', lastName: '', email: '', password: '' }}
+          initialValues={{ firstName: '', lastName: '', userEmail: '', password: '' }}
           validationSchema={registerValidationSchema}
           onSubmit={(values, { setSubmitting }) => {
-            console.log('Form data', values);
-            setTimeout(() => {
-              setSubmitting(false);
-            }, 1000);
+            UserAuthenticationService.register(values);
+            setSubmitting(false);
           }}
         >
           {({ isSubmitting }) => (
@@ -64,11 +63,11 @@ export const RegisterPage = () => {
                   <Field
                     autoComplete='new-password'
                     type='email'
-                    name='email'
+                    name='userEmail'
                     placeholder='Enter your email address'
                     className='w-full p-2 border-1 border-accent-light rounded'
                   />
-                  <ErrorMessage name='email' component='div' className='text-red-500 text-sm mt-2' />
+                  <ErrorMessage name='userEmail' component='div' className='text-red-500 text-sm mt-2' />
                 </div>
 
                 <div className='flex flex-col w-[calc(50%+1rem)]'>
@@ -85,7 +84,7 @@ export const RegisterPage = () => {
 
               <button
                 type='submit'
-                disabled={isSubmitting}
+                // disabled={isSubmitting}
                 className='w-[calc(50%+1rem)] cursor-pointer bg-gradient-to-r from-purple-500 to-indigo-500 text-white p-2 text-lg rounded'
               >
                 {isSubmitting ? 'Signing up...' : 'Sign up'}

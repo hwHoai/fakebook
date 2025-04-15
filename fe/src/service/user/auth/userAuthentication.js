@@ -9,4 +9,13 @@ export class UserAuthenticationService {
       data: data
     });
   };
+
+  static register = (data) => {
+    return request({
+      url: '/api/v1/user/register',
+      method: 'post',
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      data: data
+    });
+  };
 }
