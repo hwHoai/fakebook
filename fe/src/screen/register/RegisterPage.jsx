@@ -1,11 +1,39 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { registerValidationSchema } from '../../validation/authValidaionSchema';
 import { BRAND_NAME } from '../../constant/general';
 import register_background from '../../assets/img/register_background.png';
 import { UserAuthenticationService } from '../../service/user/auth/userAuthentication';
+import { TokenService } from '../../util/tokenService';
+import { CookieService } from '../../util/cookieService';
+import { useContext, useEffect } from 'react';
+import { AuthProvider } from '../../components/layout/provider/AuthProvider';
 
 export const RegisterPage = () => {
+  const navigate = useNavigate();
+  const loginContext = useContext(AuthProvider);
+
+  useEffect(() => {
+    if (loginContext.isAuth) {
+      navigate('/newfeed');
+    }
+  });
+
+  const handleRegisterUser = async (values, { setSubmitting }) => {
+    try {
+      console.log(values);
+      const tokens = await UserAuthenticationService.signUp(values);
+      console.log(tokens);
+      for (const key in tokens) {
+        const tokenPayload = TokenService.decodeToken(tokens[key]);
+        const tokenExpire = new Date(tokenPayload.exp);
+        CookieService.setCookie(key, tokens[key], tokenExpire);
+      }
+      navigate('/');
+    } finally {
+      setSubmitting(false);
+    }
+  };
   return (
     <div
       className='flex h-screen w-full min-w-[900px] min-h-[500px] overflow-auto'
@@ -28,8 +56,7 @@ export const RegisterPage = () => {
           initialValues={{ firstName: '', lastName: '', userEmail: '', password: '' }}
           validationSchema={registerValidationSchema}
           onSubmit={(values, { setSubmitting }) => {
-            UserAuthenticationService.register(values);
-            setSubmitting(false);
+            handleRegisterUser(values, { setSubmitting });
           }}
         >
           {({ isSubmitting }) => (
@@ -84,7 +111,7 @@ export const RegisterPage = () => {
 
               <button
                 type='submit'
-                // disabled={isSubmitting}
+                disabled={isSubmitting}
                 className='w-[calc(50%+1rem)] cursor-pointer bg-gradient-to-r from-purple-500 to-indigo-500 text-white p-2 text-lg rounded'
               >
                 {isSubmitting ? 'Signing up...' : 'Sign up'}
