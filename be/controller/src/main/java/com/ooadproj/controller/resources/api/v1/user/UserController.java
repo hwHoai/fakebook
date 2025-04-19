@@ -19,7 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.security.NoSuchAlgorithmException;
 
-//@Controller
+@Controller
 @RestController
 @Slf4j
 @RequestMapping("/api/v1/user")

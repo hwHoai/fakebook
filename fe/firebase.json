@@ -1,9 +1,0 @@
-{
-  "rules": {
-    "fakebook-5b337.firebasestorage.app": {
-      ".read": true,
-
-      ".write": true
-    }
-  }
-}

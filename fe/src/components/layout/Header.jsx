@@ -26,8 +26,6 @@ export const Header = () => {
   //   setIsAuth(false);
   // };
 
-  console.log('userAvatarUrl', userAvatarUrl);
-
   const handleChangeInput = useCallback((value) => {
     setSearchValue(() => {
       return value;

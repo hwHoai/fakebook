@@ -1,9 +1,15 @@
 import { useContext, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { Card } from '../ui/Card';
 import { CookieService } from '../../util/cookieService';
 import { UserInfoProvider } from '../layout/provider/provider';
 
 export const UserMenu = ({ isOpen, onClose, profileButtonRef }) => {
+  UserMenu.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    profileButtonRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }).isRequired
+  };
   const menuRef = useRef(null);
     const { userAvatarUrl, userName } = useContext(UserInfoProvider);
   
@@ -17,7 +23,9 @@ export const UserMenu = ({ isOpen, onClose, profileButtonRef }) => {
         !profileButtonRef.current.contains(event.target)
       ) {
         onClose();
-      }
+    };
+    
+    
     };
 
     if (isOpen) {

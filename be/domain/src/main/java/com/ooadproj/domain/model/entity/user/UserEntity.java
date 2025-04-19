@@ -1,5 +1,7 @@
 package com.ooadproj.domain.model.entity.user;
 
+import com.ooadproj.domain.model.entity.feed.FeedComment;
+import com.ooadproj.domain.model.entity.feed.FeedEntity;
 import com.ooadproj.domain.model.entity.key.AuthenticationKeyEntity;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -39,11 +41,33 @@ public class UserEntity {
     @Column(columnDefinition = "VARCHAR(255) comment 'user phone number'", unique = true)
     private String phoneNumber;
 
+    @Column(columnDefinition = "VARCHAR(255) comment 'user avatar'")
+    private String avatar;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
     private List<AuthenticationKeyEntity> keyTokenList;
 
-    @Column(columnDefinition = "VARCHAR(255) comment 'user avatar'")
-    private String avatar;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    private List<FeedEntity> feedList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    private List<FeedComment> feedCommentList;
+
+    @ManyToOne(cascade = CascadeType.DETACH, targetEntity = FeedEntity.class)
+    @JoinColumn(name = "liked_feed_id")
+    private FeedEntity feedLiked;
+
+    @ManyToOne(cascade = CascadeType.DETACH, targetEntity = FeedEntity.class)
+    @JoinColumn(name = "shared_feed_id")
+    private FeedEntity feedShared;
+
+    public List<FeedEntity> getFeedList() {
+        return feedList;
+    }
+
+    public void setFeedList(List<FeedEntity> feedList) {
+        this.feedList = feedList;
+    }
 
     public String getAvatar() {
         return avatar;
