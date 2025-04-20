@@ -1,5 +1,5 @@
 export const ROUTE_PATH = {
-  HOME: '/',
+  HOME: '/newfeed?',
   NEW_FEED: '/newfeed',
   REGISTER: '/register',
   TEST: '/test',

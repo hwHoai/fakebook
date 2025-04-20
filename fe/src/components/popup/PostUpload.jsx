@@ -18,7 +18,7 @@ export const PostUpload = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
   const { userAvatarUrl, userName } = useContext(UserInfoProvider);
   const authToken = CookieService.getCookie('accessToken');
-  const { userId } = TokenService.decodeToken(authToken);
+  const { userId } = TokenService.decodeToken(authToken) || {};
   const [formData, setFormData] = useState({
     userId: userId,
     caption: '',
