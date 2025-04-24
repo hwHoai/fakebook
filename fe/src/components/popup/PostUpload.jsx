@@ -1,14 +1,48 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MediaUploader } from '../common/MediaUploader';
 import { useTranslation } from 'react-i18next';
+import { UserInfoProvider } from '../layout/provider/provider';
+import { CookieService } from '../../util/cookieService';
+import { TokenService } from '../../util/tokenService';
+import { FeedService } from '../../service/feed/feedService';
+import { firebaseStorage } from '../../config/firebaseStorage';
+import { ref, uploadBytes, uploadString } from 'firebase/storage';
+import { UserInforService } from '../../service/user/userInforService';
 
+// eslint-disable-next-line react/prop-types
 export const PostUpload = ({ isOpen, onClose }) => {
   const [content, setContent] = useState(''); // Trạng thái nội dung bài viết
   const [files, setFiles] = useState([]);
   const { t } = useTranslation();
+  const { userAvatarUrl, userName } = useContext(UserInfoProvider);
+  const authToken = CookieService.getCookie('accessToken');
+  const { userId } = TokenService.decodeToken(authToken) || {};
+  const [formData, setFormData] = useState({
+    userId: userId,
+    caption: '',
+    listImageString: '',
+    createAt: '',
+    updateAt: ''
+  });
+
+  useEffect(() => {
+    setFormData((prev) => {
+      return {
+        ...prev,
+        caption: content,
+        listImageString: files
+          .map((file) => {
+            return file.url.split('/').slice(-1)[0];
+          })
+          .join('___'),
+        createAt: new Date().toISOString(),
+        updateAt: new Date().toISOString()
+      };
+    });
+  }, [files, content]);
 
   if (!isOpen) return null;
 
@@ -24,6 +58,38 @@ export const PostUpload = ({ isOpen, onClose }) => {
     setContent('');
     setFiles([]);
     onClose();
+  };
+
+  const handlePost = async () => {
+    try {
+      // Upload new feed to the server
+      console.log('Posting:', formData);
+      const createFeedResponse = await FeedService.createNewFeed(formData);
+      if (!createFeedResponse) {
+        console.warn('Post failed');
+        return;
+      }
+
+      // Upload files to Firebase Storage
+      files.forEach((file) => {
+        (async () => {
+          const storageRef = `images/${userId}/${formData.listImageString}/${file.url.split('/').slice(-1)[0]}`
+          const fileUpload = await UserInforService.uploadImgaeToFirebase(storageRef, file.url);
+          console.log(fileUpload);
+        })();
+      });
+
+      console.log('All files uploaded successfully!');
+
+      // Clear form and close popup
+      setContent('');
+      setFiles([]);
+      onClose();
+    } catch (error) {
+      console.error('Error while posting:', error);
+      alert(`Failed to post: ${error.message}`);
+      // Don't throw the error here - handle it gracefully
+    }
   };
 
   const isPostDisabled = content.trim() === '' && files.length === 0;
@@ -45,9 +111,9 @@ export const PostUpload = ({ isOpen, onClose }) => {
         </div>
         <CardContent className='py-4'>
           <div className='flex items-center gap-3'>
-            <img src='src/assets/img/test.jpg' alt='User Avatar' className='w-10 h-10 rounded-full' />
+            <img src={userAvatarUrl} alt='User Avatar' className='w-10 h-10 rounded-full' />
             <div>
-              <p className='font-medium text-base'>Nam Hoàng</p>
+              <p className='font-medium text-base'>{userName}</p>
             </div>
           </div>
           <textarea
@@ -63,7 +129,7 @@ export const PostUpload = ({ isOpen, onClose }) => {
         </div>
 
         <div className='flex items-center justify-between p-2 pb-0 border-t'>
-          <Button className='bg-[#7940ed] w-full  text-sm' disabled={isPostDisabled}>
+          <Button onClick={handlePost} className='bg-[#7940ed] w-full  text-sm' disabled={isPostDisabled}>
             {t('button.post')}
           </Button>
         </div>

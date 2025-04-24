@@ -9,7 +9,9 @@ export const publicRoute = [
   {
     id: 'default_page',
     path: ROUTE_PATH.HOME,
-    element: <NewFeedPage />,
+    element: (
+        <NewFeedPage />
+    ),
     index: true
   },
   {

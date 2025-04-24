@@ -7,7 +7,7 @@ import { UserAuthenticationService } from '../../service/user/auth/userAuthentic
 import { TokenService } from '../../util/tokenService';
 import { CookieService } from '../../util/cookieService';
 import { useContext, useEffect } from 'react';
-import { AuthProvider } from '../../components/layout/provider/AuthProvider';
+import { AuthProvider } from '../../components/layout/provider/provider';
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
@@ -26,9 +26,10 @@ export const RegisterPage = () => {
       console.log(tokens);
       for (const key in tokens) {
         const tokenPayload = TokenService.decodeToken(tokens[key]);
-        const tokenExpire = new Date(tokenPayload.exp);
+        const tokenExpire = new Date(tokenPayload.exp * 1000);
         CookieService.setCookie(key, tokens[key], tokenExpire);
       }
+      loginContext.setIsAuth(true);
       navigate('/');
     } finally {
       setSubmitting(false);

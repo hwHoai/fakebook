@@ -1,5 +1,6 @@
 package com.ooadproj.application.service.userService;
 
+import com.ooadproj.application.service.feedService.FeedService;
 import com.ooadproj.domain.model.key.JwtToken;
 import com.ooadproj.domain.model.entity.key.AuthenticationKeyEntity;
 import com.ooadproj.domain.model.entity.user.UserEntity;
@@ -22,6 +23,8 @@ import java.security.interfaces.RSAPublicKey;
 public class UserLoginService {
     @Autowired
     private UserEntityRepository userEntityRepository;
+    @Autowired
+    private FeedService feedService;
 
     @PreAuthorize("permitAll()")
     public JwtToken loginByEmail(String email,String password) throws NoSuchAlgorithmException {
@@ -37,6 +40,11 @@ public class UserLoginService {
             throw new UserNotFoundException(email, null);
         }
 
+        new Thread(() -> {
+            // Push latest feeds to the user
+            feedService.pushLatestFeeds(user);
+        }).start();
+
         // Generate public and private key pair
         RSAKeyPairServiceImpl rsaKeyPairService = new RSAKeyPairServiceImpl();
         KeyPair keyPair =  rsaKeyPairService.generateKeyPair();
@@ -46,7 +54,7 @@ public class UserLoginService {
 
         // Generate token
         JwtTokenServiceImpl jwtTokenService = new JwtTokenServiceImpl();
-        JwtToken tokens =  jwtTokenService.generateToken(publicKey, privateKey, user.getId(),user.getUserEmail());
+        JwtToken tokens =  jwtTokenService.generateToken(publicKey, privateKey,user.getId(), user.getUserEmail());
         System.out.println((tokens.getAccessToken()));
 
         //Update key in database

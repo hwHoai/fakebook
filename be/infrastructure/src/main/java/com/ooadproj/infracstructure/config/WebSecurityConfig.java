@@ -35,6 +35,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/api/v1/message/**").authenticated()
+                        .requestMatchers("/api/v1/user/userInfo**").authenticated()
                         .requestMatchers("/**").anonymous()
                         .requestMatchers(HttpMethod.POST, "/**").anonymous()
 

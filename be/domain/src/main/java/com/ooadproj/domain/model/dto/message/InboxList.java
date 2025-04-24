@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class InboxList {
     private Long friendId;
@@ -16,4 +15,61 @@ public class InboxList {
     private LocalDateTime lastMessageTime;
     private boolean isLastMessageRead;
     private boolean isSentByMe;
+
+    public InboxList(Long friendId, String friendUsername, String lastMessage, LocalDateTime lastMessageTime, boolean isLastMessageRead, boolean isSentByMe) {
+        this.friendId = friendId;
+        this.friendUsername = friendUsername;
+        this.lastMessage = lastMessage;
+        this.lastMessageTime = lastMessageTime;
+        this.isLastMessageRead = isLastMessageRead;
+        this.isSentByMe = isSentByMe;
+    }
+
+    public Long getFriendId() {
+        return friendId;
+    }
+
+    public void setFriendId(Long friendId) {
+        this.friendId = friendId;
+    }
+
+    public String getFriendUsername() {
+        return friendUsername;
+    }
+
+    public void setFriendUsername(String friendUsername) {
+        this.friendUsername = friendUsername;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public LocalDateTime getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(LocalDateTime lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
+    }
+
+    public boolean isLastMessageRead() {
+        return isLastMessageRead;
+    }
+
+    public void setLastMessageRead(boolean lastMessageRead) {
+        isLastMessageRead = lastMessageRead;
+    }
+
+    public boolean isSentByMe() {
+        return isSentByMe;
+    }
+
+    public void setSentByMe(boolean sentByMe) {
+        isSentByMe = sentByMe;
+    }
 }

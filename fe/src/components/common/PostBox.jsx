@@ -1,17 +1,19 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Video } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PostUpload } from '../popup/PostUpload';
+import { UserInfoProvider } from '../layout/provider/provider';
 
 export const PostBox = () => {
   const { t } = useTranslation();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const {userAvatarUrl} = useContext(UserInfoProvider);
 
   return (
     <div className='w-140 bg-[#f3ecfe] p-4 rounded-2xl'>
       <div className='flex items-center gap-3'>
         {/* Avatar */}
-        <img src='src/assets/img/test.jpg' alt='User Avatar' className='w-10 h-10 rounded-full' />
+        <img src={userAvatarUrl} alt='User Avatar' className='w-10 h-10 rounded-full' />
 
         {/* Input Field */}
         <div
