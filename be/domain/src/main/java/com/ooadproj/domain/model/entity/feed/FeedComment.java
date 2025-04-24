@@ -24,11 +24,11 @@ public class FeedComment {
 
     @ManyToOne(cascade = CascadeType.DETACH, targetEntity = UserEntity.class)
     @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private UserEntity userId;
 
     @ManyToOne(cascade = CascadeType.DETACH, targetEntity = FeedEntity.class)
     @JoinColumn(name = "feed_id")
-    private FeedEntity feed;
+    private FeedEntity feedId;
 
     @Column(columnDefinition = "TEXT comment 'feed comment content'")
     private String content;
@@ -47,20 +47,20 @@ public class FeedComment {
         this.id = id;
     }
 
-    public UserEntity getUser() {
-        return user;
+    public UserEntity getUserId() {
+        return userId;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public void setUserId(UserEntity userId) {
+        this.userId = userId;
     }
 
-    public FeedEntity getFeed() {
-        return feed;
+    public FeedEntity getFeedId() {
+        return feedId;
     }
 
-    public void setFeed(FeedEntity feed) {
-        this.feed = feed;
+    public void setFeedId(FeedEntity feedId) {
+        this.feedId = feedId;
     }
 
     public String getContent() {

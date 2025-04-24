@@ -5,6 +5,7 @@ import com.ooadproj.domain.model.entity.feed.FeedEntity;
 import com.ooadproj.domain.model.entity.key.AuthenticationKeyEntity;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -19,6 +20,7 @@ import java.util.List;
 @Table(name = "user_info")
 @DynamicInsert
 @DynamicUpdate
+@ToString(exclude = {"keyTokenList", "ownFeedList", "feedCommentList", "followerList", "followingList", "newFeedList"})
 public class UserEntity {
 
     @Id
@@ -47,35 +49,46 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
     private List<AuthenticationKeyEntity> keyTokenList;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
-    private List<FeedEntity> feedList;
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.DETACH)
+    private List<FeedEntity> ownFeedList;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "new_feed",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "feed_id"))
+    private List<FeedEntity> newFeedList;
+
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.DETACH)
     private List<FeedComment> feedCommentList;
 
-    @ManyToOne(cascade = CascadeType.DETACH, targetEntity = FeedEntity.class)
-    @JoinColumn(name = "liked_feed_id")
-    private FeedEntity feedLiked;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_follower",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id"))
+    private List<UserEntity> followerList;
+    @ManyToMany(mappedBy = "followerList")
+    private List<UserEntity> follower;
 
-    @ManyToOne(cascade = CascadeType.DETACH, targetEntity = FeedEntity.class)
-    @JoinColumn(name = "shared_feed_id")
-    private FeedEntity feedShared;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_following",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id"))
+    private List<UserEntity> followingList;
+    @ManyToMany(mappedBy = "followingList")
+    private List<UserEntity> following;
 
-    public List<FeedEntity> getFeedList() {
-        return feedList;
-    }
 
-    public void setFeedList(List<FeedEntity> feedList) {
-        this.feedList = feedList;
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_like",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "feed_id"))
+    private List<FeedEntity> feedLiked;
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_share",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "feed_id"))
+    private List<FeedEntity> feedShared;
 
     public Long getId() {
         return id;
@@ -125,11 +138,91 @@ public class UserEntity {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public List<AuthenticationKeyEntity> getKeyTokenList() {
         return keyTokenList;
     }
 
     public void setKeyTokenList(List<AuthenticationKeyEntity> keyTokenList) {
         this.keyTokenList = keyTokenList;
+    }
+
+    public List<FeedEntity> getOwnFeedList() {
+        return ownFeedList;
+    }
+
+    public void setOwnFeedList(List<FeedEntity> ownFeedList) {
+        this.ownFeedList = ownFeedList;
+    }
+
+    public List<FeedEntity> getNewFeedList() {
+        return newFeedList;
+    }
+
+    public void setNewFeedList(List<FeedEntity> newFeedList) {
+        this.newFeedList = newFeedList;
+    }
+
+    public List<FeedComment> getFeedCommentList() {
+        return feedCommentList;
+    }
+
+    public void setFeedCommentList(List<FeedComment> feedCommentList) {
+        this.feedCommentList = feedCommentList;
+    }
+
+    public List<UserEntity> getFollowerList() {
+        return followerList;
+    }
+
+    public void setFollowerList(List<UserEntity> followerList) {
+        this.followerList = followerList;
+    }
+
+    public List<UserEntity> getFollower() {
+        return follower;
+    }
+
+    public void setFollower(List<UserEntity> follower) {
+        this.follower = follower;
+    }
+
+    public List<UserEntity> getFollowingList() {
+        return followingList;
+    }
+
+    public void setFollowingList(List<UserEntity> followingList) {
+        this.followingList = followingList;
+    }
+
+    public List<UserEntity> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<UserEntity> following) {
+        this.following = following;
+    }
+
+    public List<FeedEntity> getFeedLiked() {
+        return feedLiked;
+    }
+
+    public void setFeedLiked(List<FeedEntity> feedLiked) {
+        this.feedLiked = feedLiked;
+    }
+
+    public List<FeedEntity> getFeedShared() {
+        return feedShared;
+    }
+
+    public void setFeedShared(List<FeedEntity> feedShared) {
+        this.feedShared = feedShared;
     }
 }

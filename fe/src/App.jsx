@@ -2,17 +2,16 @@ import { Routes, Route, BrowserRouter } from 'react-router';
 import { privateRoute } from './route/PrivateRoute';
 import { publicRoute } from './route/PublicRoute';
 import { useEffect, useReducer, useState } from 'react';
-import { AuthProvider, UserInfoProvider } from './components/layout/provider/provider';
+import { AuthProvider, GolbalLoadingProvider, UserInfoProvider } from './components/layout/provider/provider';
 import { CookieService } from './util/cookieService';
 import { UserInfoReducer } from './redux/reducerStore';
 import { DEFAULT_AVATAR_FILENAME, DEFAULT_AVATAR_URL } from './constant/general';
-import { firebaseStorage } from './config/firebaseStorage';
-import { getDownloadURL, ref } from 'firebase/storage';
 import { TokenService } from './util/tokenService';
 import { UserInforService } from './service/user/userInforService';
 
 const App = () => {
   const [isAuth, setIsAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [userPublicInfo, dispatch] = useReducer(UserInfoReducer, {
     userName: '',
     userEmail: '',
@@ -21,8 +20,8 @@ const App = () => {
     userAvatarUrl: DEFAULT_AVATAR_URL
   });
 
+
   useEffect(() => {
-    console.log('isAuth', isAuth);
     // check if token is valid;
     const authToken = CookieService.getCookie('accessToken');
     if (!authToken) {
@@ -62,7 +61,6 @@ const App = () => {
 
       // If userInfo exists
       setIsAuth(true);
-      console.log('userInfo', userInfo.userName);
       dispatch({
         type: 'SET_USER_INFO',
         payload: {
@@ -74,47 +72,46 @@ const App = () => {
       });
     });
     //get user avatar
-    const avatarRef = ref(firebaseStorage, userPublicInfo.userAvatar);
-    if (!avatarRef) {
-      console.log('Avatar url is null');
-    }
-    getDownloadURL(avatarRef).then((url) => {
+    UserInforService.getFileFormFirebase(userPublicInfo.userAvatar).then((url) => {
+      console.log('Avatar url: ', url);
       dispatch({
         type: 'SET_USER_AVATAR_URL',
         payload: {
           userAvatarUrl: url
         }
       });
-    });
+    })
+    setLoading(false);
     } catch (error) {
       console.error('Error :', error);
       setIsAuth(false);
     }
-  }, [isAuth, userPublicInfo.userAvatar]);
-  console.log('userAvatarUrl', userPublicInfo.userAvatarUrl);
+  }, [isAuth, userPublicInfo.userAvatar, userPublicInfo.userName, userPublicInfo.userEmail, userPublicInfo.phoneNumber]);
   return (
-    <AuthProvider.Provider value={{ isAuth, setIsAuth }}>
-      <UserInfoProvider.Provider value={userPublicInfo}>
-        <BrowserRouter>
-          {
-            <Routes>
-              {publicRoute.map((route, i) => (
-                <Route key={i} {...route} />
-              ))}
-            </Routes>
-          }
-          {isAuth ? (
-            <Routes>
-              {privateRoute.map((route, i) => (
-                <Route key={i} {...route} />
-              ))}
-            </Routes>
-          ) : (
-            <></>
-          )}
-        </BrowserRouter>
-      </UserInfoProvider.Provider>
-    </AuthProvider.Provider>
+    <GolbalLoadingProvider.Provider value={{ loading, setLoading }}>
+      <AuthProvider.Provider value={{ isAuth, setIsAuth }}>
+        <UserInfoProvider.Provider value={userPublicInfo}>
+          <BrowserRouter>
+            {
+              <Routes>
+                {publicRoute.map((route, i) => (
+                  <Route key={i} {...route} />
+                ))}
+              </Routes>
+            }
+            {isAuth ? (
+              <Routes>
+                {privateRoute.map((route, i) => (
+                  <Route key={i} {...route} />
+                ))}
+              </Routes>
+            ) : (
+              <></>
+            )}
+          </BrowserRouter>
+        </UserInfoProvider.Provider>
+      </AuthProvider.Provider>
+    </GolbalLoadingProvider.Provider>
   );
 };
 

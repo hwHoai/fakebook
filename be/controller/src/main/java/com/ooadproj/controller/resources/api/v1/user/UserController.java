@@ -60,7 +60,6 @@ public class UserController {
     public ResponseEntity<UserPublicInfo> getUserPublicInfo(@PathVariable("userId") String userId) throws NoSuchAlgorithmException {
         try {
             Long id = Long.parseLong(userId);
-            System.out.println(id);
             UserPublicInfo user = userInfoService.getUserInfoById(id);
             return ResponseEntity.status(HttpStatus.OK).body(user);
         } catch (Exception e) {

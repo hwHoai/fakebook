@@ -10,6 +10,7 @@ import { TokenService } from '../../util/tokenService';
 import { FeedService } from '../../service/feed/feedService';
 import { firebaseStorage } from '../../config/firebaseStorage';
 import { ref, uploadBytes, uploadString } from 'firebase/storage';
+import { UserInforService } from '../../service/user/userInforService';
 
 // eslint-disable-next-line react/prop-types
 export const PostUpload = ({ isOpen, onClose }) => {
@@ -72,27 +73,11 @@ export const PostUpload = ({ isOpen, onClose }) => {
       // Upload files to Firebase Storage
       files.forEach((file) => {
         (async () => {
-          if (file.url.startsWith('blob:')) {
-            const image = await fetch(file.url).then((res) => res.blob());
-            const imageRef = ref(
-              firebaseStorage,
-              `images/${userId}/${formData.listImageString}/${file.url.split('/').slice(-1)[0]}`
-            );
-            uploadBytes(imageRef, image).then((snapshot) => {
-              console.log('Uploaded a blob or file!', snapshot);
-            });
-          }
-          if (file.url.startsWith('data:')) {
-            const imageRef = ref(
-              firebaseStorage,
-              `images/${userId}/${formData.listImageString}/${file.url.split('/').slice(-1)[0]}.jpg`
-            );
-            uploadString(imageRef, file.url).then((snapshot) => {
-              console.log('Uploaded a blob or file!', snapshot);
-            });
-          }
-        })()
-      })
+          const storageRef = `images/${userId}/${formData.listImageString}/${file.url.split('/').slice(-1)[0]}`
+          const fileUpload = await UserInforService.uploadImgaeToFirebase(storageRef, file.url);
+          console.log(fileUpload);
+        })();
+      });
 
       console.log('All files uploaded successfully!');
 

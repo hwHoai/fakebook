@@ -3,6 +3,7 @@ package com.ooadproj.domain.model.entity.feed;
 import com.ooadproj.domain.model.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -17,6 +18,7 @@ import java.util.List;
 @Table(name = "feed")
 @DynamicUpdate
 @DynamicInsert
+@ToString(exclude = {"user", "userLikedList", "commentsList", "userSharedList"})
 public class FeedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +27,7 @@ public class FeedEntity {
 
     @ManyToOne(cascade = CascadeType.DETACH, targetEntity = UserEntity.class)
     @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private UserEntity userId;
 
     @Column( columnDefinition = "TEXT comment 'feed caption'", nullable = false)
     private String caption;
@@ -33,22 +35,17 @@ public class FeedEntity {
     @Column(columnDefinition = "TEXT comment 'imageName1___imageName2___imageName3...'")
     private String listImageString;
 
-    public String getListImageString() {
-        return listImageString;
-    }
+    @ManyToMany(mappedBy = "newFeedList")
+    private List<UserEntity> userFollowList;
 
-    public void setListImageString(String listImageString) {
-        this.listImageString = listImageString;
-    }
-
-    @OneToMany(mappedBy = "feedLiked", cascade = CascadeType.DETACH)
+    @ManyToMany(mappedBy = "feedLiked", cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private List<UserEntity> userLikedList;
 
-    @OneToMany(mappedBy = "feed", cascade = CascadeType.DETACH)
-    private List<FeedComment>  feedCommentsList;
-
-    @OneToMany(mappedBy = "feedShared", cascade = CascadeType.DETACH)
+    @ManyToMany(mappedBy = "feedShared", cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private List<UserEntity> userSharedList;
+
+    @OneToMany(mappedBy = "feedId", cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    private List<FeedComment>  commentsList;
 
     @Column(columnDefinition = "VARCHAR(255) comment 'feed created time'")
     private String createdAt;
@@ -64,12 +61,12 @@ public class FeedEntity {
         this.id = id;
     }
 
-    public UserEntity getUser() {
-        return user;
+    public UserEntity getUserId() {
+        return userId;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public void setUserId(UserEntity userId) {
+        this.userId = userId;
     }
 
     public String getCaption() {
@@ -80,6 +77,21 @@ public class FeedEntity {
         this.caption = caption;
     }
 
+    public String getListImageString() {
+        return listImageString;
+    }
+
+    public void setListImageString(String listImageString) {
+        this.listImageString = listImageString;
+    }
+
+    public List<UserEntity> getUserFollowList() {
+        return userFollowList;
+    }
+
+    public void setUserFollowList(List<UserEntity> userFollowList) {
+        this.userFollowList = userFollowList;
+    }
 
     public List<UserEntity> getUserLikedList() {
         return userLikedList;
@@ -89,20 +101,20 @@ public class FeedEntity {
         this.userLikedList = userLikedList;
     }
 
-    public List<FeedComment> getFeedCommentsList() {
-        return feedCommentsList;
-    }
-
-    public void setFeedCommentsList(List<FeedComment> feedCommentsList) {
-        this.feedCommentsList = feedCommentsList;
-    }
-
     public List<UserEntity> getUserSharedList() {
         return userSharedList;
     }
 
     public void setUserSharedList(List<UserEntity> userSharedList) {
         this.userSharedList = userSharedList;
+    }
+
+    public List<FeedComment> getCommentsList() {
+        return commentsList;
+    }
+
+    public void setCommentsList(List<FeedComment> commentsList) {
+        this.commentsList = commentsList;
     }
 
     public String getCreatedAt() {

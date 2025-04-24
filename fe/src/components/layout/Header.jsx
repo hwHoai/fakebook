@@ -32,7 +32,7 @@ export const Header = () => {
     });
   }, []);
   return (
-    <div className='h-18 bg-white z-1000  fixed right-0 left-0 shadow flex items-center justify-around py-3'>
+    <div className='h-18 bg-white z-1000 fixed right-0 left-0 shadow flex items-center justify-around py-3'>
       <Link to={'/'} className='flex items-center'>
         <img src={icon} alt='logo' height={100} width={100} className='h-12 w-12 grow' />
         <div className='text-2xl px-3 text-center text-accent-light font-medium inline-block'>{BRAND_NAME}</div>

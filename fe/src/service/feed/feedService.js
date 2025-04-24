@@ -11,4 +11,20 @@ export class FeedService {
       data: data
     });
   };
+
+  static getNewFeed = (userId) => {
+    return request({
+      url: 'feed/new_feeds',
+      method: 'get',
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` },
+      params: { userId }
+    });
+  };
+  static getNewFeedForGuest = () => {
+    return request({
+      url: 'feed/guest/new_feeds',
+      method: 'get',
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    });
+  };
 }

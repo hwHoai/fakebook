@@ -1,5 +1,6 @@
 package com.ooadproj.application.service.userService;
 
+import com.ooadproj.application.service.feedService.FeedService;
 import com.ooadproj.domain.model.key.JwtToken;
 import com.ooadproj.domain.model.entity.key.AuthenticationKeyEntity;
 import com.ooadproj.domain.model.entity.user.UserEntity;
@@ -31,6 +32,9 @@ public class UserRegisterService {
     @Autowired
     private AuthenticationKeyEntityRepository authenticationKeyEntityRepository;
 
+    @Autowired
+    private FeedService feedService;
+
     public JwtToken registerUser(UserEntity user) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, BadRequestException {
         // Check if user email already exists
         String userEmail = user.getUserEmail();
@@ -47,6 +51,11 @@ public class UserRegisterService {
         new Thread(() -> {
             user.setAvatar("men_default_avatar.JPG");
             userEntityRepository.save(user);
+        }).start();
+
+        new Thread(() -> {
+            // Push latest feeds to the user
+            feedService.pushLatestFeeds(user);
         }).start();
 
         // Generate public and private key pair
