@@ -1,0 +1,99 @@
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router';
+import { InboxList } from '../../components/common/InboxList';
+import { ProfilePanel } from '../../components/common/ProfilePanel';
+import { ChatWindow } from '../../components/common/ChatWindow';
+import { CookieService } from '../../util/cookieService';
+import { TokenService } from '../../util/tokenService';
+import { UserMessageService } from '../../service/user/message/userMessage';
+
+export const ChatWithFriend = () => {
+  const navigate = useNavigate();
+  const { friendId } = useParams();
+
+  const [inboxList, setInboxList] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+
+  useEffect(() => {
+    const fetchInbox = async () => {
+      try {
+        const token = CookieService.getCookie('accessToken');
+        if (!token) {
+          console.error('Access token not found');
+          return;
+        }
+
+        setAccessToken(token);
+
+        const decodedToken = TokenService.decodeToken(token);
+        const currentUserId = decodedToken.userId;
+        setUserId(currentUserId);
+
+        const inbox = await UserMessageService.getUserInboxList(currentUserId);
+        setInboxList(inbox);
+      } catch (error) {
+        console.error('Error fetching inbox:', error);
+      }
+    };
+
+    fetchInbox();
+  }, [navigate]);
+
+  useEffect(() => {
+    const markMessagesAsRead = async () => {
+      if (!friendId) return;
+
+      try {
+        await UserMessageService.markMessagesAsRead(Number(friendId));
+        setInboxList((prevInboxList) =>
+          prevInboxList.map((item) => (item.friendId === Number(friendId) ? { ...item, lastMessageRead: true } : item))
+        );
+      } catch (error) {
+        console.error('Error marking messages as read:', error);
+      }
+    };
+
+    markMessagesAsRead();
+  }, [friendId]);
+
+  // Function to update the inbox list
+  const updateInboxList = useCallback((friendId, message, sentByMe, sentByAnotherFriend) => {
+    setInboxList((prevInboxList) => {
+      const updatedInbox = prevInboxList.map((item) =>
+        item.friendId === friendId
+          ? {
+              ...item,
+              lastMessage: message.content,
+              lastMessageTime: message.createdAt,
+              sentByMe,
+              lastMessageRead: sentByMe || !sentByAnotherFriend
+            }
+          : item
+      );
+      // Move the updated friend to the top of the list
+      const updatedFriend = updatedInbox.find((item) => item.friendId === friendId);
+      const otherFriends = updatedInbox.filter((item) => item.friendId !== friendId);
+
+      return [updatedFriend, ...otherFriends];
+    });
+  }, []);
+
+  // Find the current friend's name
+  const currentFriend = inboxList.find((friend) => friend.friendId === Number(friendId));
+  const currentFriendName = currentFriend ? currentFriend.friendUsername : 'Unknown';
+
+  return (
+    <div className='flex h-screen bg-white'>
+      <InboxList inbox={inboxList} friendId={friendId} />
+      <ChatWindow
+        onMessageUpdate={updateInboxList}
+        userId={userId}
+        friendId={friendId}
+        accessToken={accessToken}
+        friendName={currentFriendName}
+      />
+      <ProfilePanel friendName={currentFriendName} />
+    </div>
+  );
+};
