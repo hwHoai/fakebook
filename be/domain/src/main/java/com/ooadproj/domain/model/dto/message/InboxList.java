@@ -12,14 +12,16 @@ public class InboxList {
     private Long friendId;
     private String friendUsername;
     private String lastMessage;
+    private String friendAvatar;
     private LocalDateTime lastMessageTime;
     private boolean isLastMessageRead;
     private boolean isSentByMe;
 
-    public InboxList(Long friendId, String friendUsername, String lastMessage, LocalDateTime lastMessageTime, boolean isLastMessageRead, boolean isSentByMe) {
+    public InboxList(Long friendId, String friendUsername, String lastMessage, String friendAvatar,LocalDateTime lastMessageTime, boolean isLastMessageRead, boolean isSentByMe) {
         this.friendId = friendId;
         this.friendUsername = friendUsername;
         this.lastMessage = lastMessage;
+        this.friendAvatar = friendAvatar;
         this.lastMessageTime = lastMessageTime;
         this.isLastMessageRead = isLastMessageRead;
         this.isSentByMe = isSentByMe;
@@ -71,5 +73,13 @@ public class InboxList {
 
     public void setSentByMe(boolean sentByMe) {
         isSentByMe = sentByMe;
+    }
+
+    public String getFriendAvatar() {
+        return friendAvatar;
+    }
+
+    public void setFriendAvatar(String friendAvatar) {
+        this.friendAvatar = friendAvatar;
     }
 }

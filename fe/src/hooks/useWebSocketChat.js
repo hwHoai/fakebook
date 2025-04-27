@@ -21,6 +21,7 @@ export const useWebSocketChat = ({ userId, accessToken, isLoggedIn, onMessage, o
         console.log('WebSocket connected');
 
         client.subscribe(`/topic/messages/${userId}`, (message) => {
+          console.log('Received message:', message.body);
           const msg = JSON.parse(message.body);
           onMessage(msg);
         });
@@ -54,12 +55,13 @@ export const useWebSocketChat = ({ userId, accessToken, isLoggedIn, onMessage, o
     };
   }, [userId]);
 
-  const sendMessage = (receiverId, content) => {
+  const sendMessage = (senderId, receiverId, content) => {
     const client = stompClientRef.current;
     if (client && client.connected) {
       client.publish({
         destination: '/app/chat',
         body: JSON.stringify({
+          senderId,
           receiverId,
           content
         })

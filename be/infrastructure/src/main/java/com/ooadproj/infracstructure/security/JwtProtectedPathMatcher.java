@@ -10,7 +10,6 @@ public class JwtProtectedPathMatcher {
 
     private static final List<String> protectedPaths = List.of(
             "/api/v1/message/**"
-
     );
 
     public static boolean requiresAuthentication(String requestPath) {
