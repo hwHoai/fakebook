@@ -40,7 +40,7 @@ export const Test = () => {
   const sendMessage = () => {
     client.publish({
       destination: '/app/chat',
-      body: JSON.stringify({ senderId: 2, receiverId: 1, content: message })
+      body: JSON.stringify({ senderId: 17, receiverId: 15, content: message })
     });
     setMessage('');
   };

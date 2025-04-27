@@ -5,6 +5,7 @@ export const ROUTE_PATH = {
   TEST: '/test',
   LOGIN: '/login',
   CHAT: '/chat',
+  CHAT_WITH_FRIEND: '/chat/:friendId',
   PROFILE: {
     USERNAME: '/profile/:userName'
   }

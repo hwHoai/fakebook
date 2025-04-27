@@ -43,12 +43,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //        }
 
         String path = request.getServletPath();
-
+        System.out.print("Request path: " + path);
         if (!requiresAuthentication(path)) {
             filterChain.doFilter(request, response);
             return;
         }
-
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String token = extractTokenFromHeader(request);
         System.out.println("Token: " + token);

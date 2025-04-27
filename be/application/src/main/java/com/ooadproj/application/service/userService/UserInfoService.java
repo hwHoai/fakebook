@@ -27,4 +27,10 @@ public class UserInfoService {
             throw new RuntimeException("User not found");
         }
     }
+
+    public String getAvatarById(Long id) {
+        return userEntityRepository.findById(id)
+                .map(UserEntity::getAvatar)
+                .orElse(null);
+    }
 }

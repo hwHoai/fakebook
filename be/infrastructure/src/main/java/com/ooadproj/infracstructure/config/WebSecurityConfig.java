@@ -34,7 +34,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api/v1/message/**").authenticated()
+                        .requestMatchers("/api/v1/message/**").permitAll()
                         .requestMatchers("/api/v1/user/userInfo**").authenticated()
                         .requestMatchers("/**").anonymous()
                         .requestMatchers(HttpMethod.POST, "/**").anonymous()

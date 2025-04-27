@@ -6,7 +6,8 @@ import { ChatWindow } from '../../components/common/ChatWindow';
 import { CookieService } from '../../util/cookieService';
 import { TokenService } from '../../util/tokenService';
 import { UserMessageService } from '../../service/user/message/userMessage';
-
+import { UserInforService } from '../../service/user/userInforService';
+import { DEFAULT_AVATAR_URL, DEFAULT_AVATAR_FILENAME } from '../../constant/general';
 export const ChatWithFriend = () => {
   const navigate = useNavigate();
   const { friendId } = useParams();
@@ -14,6 +15,7 @@ export const ChatWithFriend = () => {
   const [inboxList, setInboxList] = useState([]);
   const [userId, setUserId] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
+  console.log('InboxList', inboxList);
 
   useEffect(() => {
     const fetchInbox = async () => {
@@ -31,7 +33,19 @@ export const ChatWithFriend = () => {
         setUserId(currentUserId);
 
         const inbox = await UserMessageService.getUserInboxList(currentUserId);
-        setInboxList(inbox);
+        // Process each friend's avatar
+        const updatedInbox = await Promise.all(
+          inbox.map(async (friend) => {
+            if (friend.friendAvatar === DEFAULT_AVATAR_FILENAME) {
+              return { ...friend, friendAvatarUrl: DEFAULT_AVATAR_URL };
+            } else {
+              const avatarUrl = await UserInforService.getFileFormFirebase(friend.friendAvatar);
+              return { ...friend, friendAvatarUrl: avatarUrl };
+            }
+          })
+        );
+
+        setInboxList(updatedInbox);
       } catch (error) {
         console.error('Error fetching inbox:', error);
       }
@@ -59,6 +73,7 @@ export const ChatWithFriend = () => {
 
   // Function to update the inbox list
   const updateInboxList = useCallback((friendId, message, sentByMe, sentByAnotherFriend) => {
+    console.log('updateInboxList called with:', friendId, message, sentByMe, sentByAnotherFriend);
     setInboxList((prevInboxList) => {
       const updatedInbox = prevInboxList.map((item) =>
         item.friendId === friendId
@@ -82,18 +97,23 @@ export const ChatWithFriend = () => {
   // Find the current friend's name
   const currentFriend = inboxList.find((friend) => friend.friendId === Number(friendId));
   const currentFriendName = currentFriend ? currentFriend.friendUsername : 'Unknown';
+  const friendAvatarUrl =
+    inboxList.find((friend) => friend.friendId === Number(friendId))?.friendAvatarUrl || DEFAULT_AVATAR_URL;
 
   return (
     <div className='flex h-screen bg-white'>
       <InboxList inbox={inboxList} friendId={friendId} />
+
       <ChatWindow
         onMessageUpdate={updateInboxList}
         userId={userId}
         friendId={friendId}
         accessToken={accessToken}
         friendName={currentFriendName}
+        friendAvatarUrl={friendAvatarUrl}
       />
-      <ProfilePanel friendName={currentFriendName} />
+
+      <ProfilePanel friendName={currentFriendName} friendAvatarUrl={friendAvatarUrl} />
     </div>
   );
 };

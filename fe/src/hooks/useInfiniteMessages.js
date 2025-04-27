@@ -20,6 +20,7 @@ export const useInfiniteMessages = ({ friendId, scrollRef }) => {
       try {
         const res = await UserMessageService.getMessagesWithFriend(friendId, reset ? 0 : page, 20);
         const newMessages = res.content || [];
+        console.log('newMessages', newMessages);
         const isLast = res.last;
 
         setMessages((prev) => (reset ? [...newMessages].reverse() : [...[...newMessages].reverse(), ...prev]));

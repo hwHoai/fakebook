@@ -12,6 +12,8 @@ import lombok.Setter;
 public class ChatMessage {
     private Long senderId;
     private Long receiverId;
+    private String content;
+
 
     public Long getSenderId() {
         return senderId;
@@ -37,5 +39,4 @@ public class ChatMessage {
         this.content = content;
     }
 
-    private String content;
 }
