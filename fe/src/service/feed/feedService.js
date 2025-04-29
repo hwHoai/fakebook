@@ -24,7 +24,14 @@ export class FeedService {
     return request({
       url: 'feed/guest/new_feeds',
       method: 'get',
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+    });
+  };
+  static getUserFeed = (userId) => {
+    return request({
+      url: `feed/user_feeds/${userId}`,
+      method: 'get',
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
     });
   };
 }

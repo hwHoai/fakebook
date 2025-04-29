@@ -166,4 +166,36 @@ public class FeedService {
             return null;
         }
     }
+
+    public List<GetNewFeedResponse> getFeedsByUserId(Long userId) {
+        try {
+            List<FeedEntity> newFeedList = new ArrayList<>();
+                List<FeedEntity> userFeed =  feedEntityRepository.findFeedsByUserId(userId);
+                newFeedList.addAll(userFeed);
+            // Convert FeedEntity to GetNewFeedResponse
+            List<GetNewFeedResponse> response = new ArrayList<>();
+            for (FeedEntity feed : newFeedList) {
+                GetNewFeedResponse feedResponse = new GetNewFeedResponse(
+                        feed.getId(),
+                        feed.getUserId().getId(),
+                        feed.getCaption(),
+                        feed.getListImageString(),
+                        new UserPublicInfo(feed.getUserId()),
+                        feed.getUserLikedList() != null ? feed.getUserLikedList() : new ArrayList<>(),
+                        feed.getUserLikedList().size() | 0,
+                        feed.getCommentsList() != null ? feed.getCommentsList() : new ArrayList<>(),
+                        feed.getCommentsList().size() | 0,
+                        feed.getUserSharedList() != null ? feed.getUserSharedList() : new ArrayList<>(),
+                        feed.getUserSharedList().size() | 0,
+                        feed.getCreatedAt(),
+                        feed.getUpdatedAt()
+                );
+                response.add(feedResponse);
+            }
+            return response;
+        } catch (Exception e) {
+            System.err.println("Error getting random feed: " + e.getMessage());
+            return null;
+        }
+    }
 }

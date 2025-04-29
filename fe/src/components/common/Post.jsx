@@ -215,4 +215,4 @@ export const Post = memo(function Post({ postArgs, onPostClick }) {
       />
     </div>
   );
-})
+});
