@@ -53,4 +53,14 @@ public class FeedController {
             return ResponseEntity.status(500).body(null);
         }
     }
+    @PostAuthorize("permitAll()")
+    @GetMapping("/user_feeds/{userId}")
+    public ResponseEntity<List<GetNewFeedResponse>> getFeedsByUserId(@PathVariable Long userId) {
+        try {
+            List<GetNewFeedResponse> userFeeds = feedService.getFeedsByUserId(userId);
+            return ResponseEntity.status(200).body(userFeeds);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
 }

@@ -3,6 +3,7 @@ import { NewFeedPage } from '../screen/new_feed/NewFeedPage';
 import { LoginPage } from '../screen/login/LoginPage';
 import { RegisterPage } from '../screen/register/RegisterPage';
 import { Test } from '../screen/test/Test';
+import { ProfilePage } from '../screen/profile/ProfilePage';
 
 export const publicRoute = [
   {
@@ -27,6 +28,12 @@ export const publicRoute = [
     id: 'test',
     path: ROUTE_PATH.TEST,
     element: <Test />,
+    index: true
+  },
+  {
+    id: 'profile',
+    path: ROUTE_PATH.PROFILE,
+    element: <ProfilePage />,
     index: true
   }
 ];
