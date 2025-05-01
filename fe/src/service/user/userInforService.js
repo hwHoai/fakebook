@@ -49,4 +49,31 @@ export class UserInforService {
       return error;
     }
   };
+
+  static followAnotherUser = async (userId, profileUserId) => {
+    return request({
+      url: `user/follow/${profileUserId}`,
+      method: 'post',
+      data: { userId },
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
+    });
+  };
+
+  static unfollowAnotherUser = async (userId, profileUserId) => {
+    return request({
+      url: `user/unfollow/${profileUserId}`,
+      method: 'post',
+      data: { userId },
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
+    });
+  };
+
+  static checkIfUserIsFollowing = async (userId, profileUserId) => {
+    return request({
+      url: `user/check_follow/${profileUserId}`,
+      method: 'get',
+      params: { userId },
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
+    });
+  };
 }

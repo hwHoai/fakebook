@@ -19,7 +19,7 @@ export const ProfilePage = () => {
   const [postList, setPostList] = useState([]);
   const fileInputRef = useRef(null);
   const { profileUserId } = useParams();
-  const [isFollowed, setIsFollowed] = useState(false);
+  const [isFollowed, setIsFollowed] = useState();
   const [userProfileInfo, setUserProfileInfo] = useState({
     userName: '',
     userEmail: '',
@@ -39,11 +39,14 @@ export const ProfilePage = () => {
   };
 
   const handleFollowClick = async () => {
-    // const response = await FeedService.followUser(profileUserId);
+    const request = await UserInforService.followAnotherUser(userId, profileUserId);
 
     setIsFollowed(!isFollowed);
   };
-
+  const handleUnfollowClick = async () => {
+    const request = await UserInforService.unfollowAnotherUser(userId, profileUserId);
+    setIsFollowed(!isFollowed);
+  };
   useEffect(() => {
     (async () => {
       const newPost = await FeedService.getUserFeed(profileUserId).then((res) => {
@@ -73,6 +76,20 @@ export const ProfilePage = () => {
       console.log('error', error);
     }
   }, [profileUserId]);
+
+  useEffect(() => {
+    const checkFollowStatus = async () => {
+      try {
+        const isFollowing = await UserInforService.checkIfUserIsFollowing(userId, profileUserId);
+        console.log('isFollowing', isFollowing);
+        setIsFollowed(isFollowing);
+      } catch (error) {
+        console.error('Error checking follow status:', error);
+      }
+    };
+
+    checkFollowStatus();
+  }, [userId, profileUserId]);
 
   return (
     <div className='max-w-screen max-h-screen'>
@@ -115,12 +132,12 @@ export const ProfilePage = () => {
               {userId !== Number(profileUserId) ? (
                 <>
                   {isFollowed ? (
-                    <Button onClick={handleFollowClick} className='cursor-pointer mr-2.5'>
-                      Follow
+                    <Button variant='outline' onClick={handleUnfollowClick} className='cursor-pointer mr-2.5'>
+                      Unfollow
                     </Button>
                   ) : (
-                    <Button variant='outline' onClick={handleFollowClick} className='cursor-pointer mr-2.5'>
-                      Unfollow
+                    <Button onClick={handleFollowClick} className='cursor-pointer mr-2.5'>
+                      Follow
                     </Button>
                   )}
                   <Button variant='outline' className='cursor-pointer'>
