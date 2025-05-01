@@ -33,4 +33,52 @@ public class UserInfoService {
                 .map(UserEntity::getAvatar)
                 .orElse(null);
     }
+
+    public void followUser(Long followerId, Long followingId) {
+        UserEntity follower = userEntityRepository.findById(followerId)
+                .orElseThrow(() -> new RuntimeException("Follower not found"));
+        UserEntity following = userEntityRepository.findById(followingId)
+                .orElseThrow(() -> new RuntimeException("User to follow not found"));
+
+        // Add the following user to the follower's following list
+        if (!follower.getFollowingList().contains(following)) {
+            follower.getFollowingList().add(following);
+        }
+
+        // Add the follower to the following user's follower list
+        if (!following.getFollowerList().contains(follower)) {
+            following.getFollowerList().add(follower);
+        }
+
+        // Save both entities
+        userEntityRepository.save(follower);
+        userEntityRepository.save(following);
+    }
+
+    public void unfollowUser(Long followerId, Long followingId) {
+        UserEntity follower = userEntityRepository.findById(followerId)
+                .orElseThrow(() -> new RuntimeException("Follower not found"));
+        UserEntity following = userEntityRepository.findById(followingId)
+                .orElseThrow(() -> new RuntimeException("User to unfollow not found"));
+
+        // Remove the following user from the follower's following list
+        follower.getFollowingList().remove(following);
+
+        // Remove the follower from the following user's follower list
+        following.getFollowerList().remove(follower);
+
+        // Save both entities
+        userEntityRepository.save(follower);
+        userEntityRepository.save(following);
+    }
+
+    public boolean checkFollow(Long userId, Long profileUserId) {
+        UserEntity user = userEntityRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserEntity profileUser = userEntityRepository.findById(profileUserId)
+                .orElseThrow(() -> new RuntimeException("Profile user not found"));
+
+        // Check if the profile user is in the user's following list
+        return user.getFollowingList().contains(profileUser);
+    }
 }

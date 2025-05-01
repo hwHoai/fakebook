@@ -1,5 +1,5 @@
 import { Compass, MessageSquare, Settings } from 'lucide-react';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserInfoProvider } from './provider/provider';
 import { DEFAULT_AVATAR_URL } from '../../constant/general';
 import { Link } from 'react-router';
@@ -8,9 +8,13 @@ import { TokenService } from '../../util/tokenService';
 
 export const SidebarLeft = () => {
   const { userAvatarUrl, userName } = useContext(UserInfoProvider);
+
   const token = CookieService.getCookie('accessToken');
-  const decodedToken = TokenService.decodeToken(token);
-  const currentUserId = decodedToken.userId;
+  let currentUserId = null;
+  if (token) {
+    const decodedToken = TokenService.decodeToken(token);
+    currentUserId = decodedToken.userId;
+  }
   return (
     <div className='fixed z-999 left-0 top-18 h-full w-[23%] bg-[#f3ecfe] p-4'>
       <div className='flex flex-col items-center justify-center'>
