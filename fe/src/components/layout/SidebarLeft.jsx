@@ -1,5 +1,5 @@
 import { Compass, MessageSquare, Settings } from 'lucide-react';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { UserInfoProvider } from './provider/provider';
 import { DEFAULT_AVATAR_URL } from '../../constant/general';
 import { Link } from 'react-router';
@@ -35,10 +35,13 @@ export const SidebarLeft = () => {
         </li>
 
         <li>
-          <button className='p-2 cursor-pointer flex items-center gap-3 w-full h-12 text-base   rounded-lg hover:bg-[#33284a] hover:text-white'>
+          <Link
+            to='/chat'
+            className='p-2 cursor-pointer flex items-center gap-3 w-full h-12 text-base   rounded-lg hover:bg-[#33284a] hover:text-white'
+          >
             <MessageSquare size={20} />
             Message
-          </button>
+          </Link>
         </li>
 
         <li>

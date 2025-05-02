@@ -12,7 +12,9 @@ import { MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserInforService } from '../../service/user/userInforService';
 import { DEFAULT_AVATAR_URL, DEFAULT_AVATAR_FILENAME } from '../../constant/general';
+import { useNavigate, Link } from 'react-router';
 export const ProfilePage = () => {
+  const navigate = useNavigate();
   const [imageSrc, setImageSrc] = useState(null);
   const authToken = CookieService.getCookie('accessToken');
   const { userId } = TokenService.decodeToken(authToken) || {};
@@ -36,6 +38,24 @@ export const ProfilePage = () => {
 
   const handleIconClick = () => {
     fileInputRef.current.click();
+  };
+  // const handleOpenChat = () => {
+  //   const chatUrl = `/chat`; // Replace with your route
+  //   window.open(chatUrl, '_blank'); // Open in new tab
+  // };
+
+  const handleMessageClick = () => {
+    const tempUser = {
+      friendId: Number(profileUserId),
+      friendUsername: userProfileInfo.userName,
+      friendAvatarUrl: userProfileInfo.userProfileImage,
+      lastMessage: '',
+      lastMessageTime: new Date().toISOString(),
+      sentByMe: false,
+      lastMessageRead: true
+    };
+
+    navigate(`/chat/${tempUser.friendId}`, { state: { tempUser } });
   };
 
   const handleFollowClick = async () => {
@@ -140,16 +160,18 @@ export const ProfilePage = () => {
                       Follow
                     </Button>
                   )}
-                  <Button variant='outline' className='cursor-pointer'>
+                  <Button onClick={handleMessageClick} variant='outline' className='cursor-pointer'>
                     <MessageSquare className='w-4 h-4 mr-0.5' />
                     Message
                   </Button>
                 </>
               ) : (
-                <Button variant='outline' className='cursor-pointer'>
-                  <MessageSquare className='w-4 h-4 mr-0.5' />
-                  View Messages
-                </Button>
+                <Link to='/chat' className='cursor-pointer'>
+                  <Button variant='outline' className='cursor-pointer'>
+                    <MessageSquare className='w-4 h-4 mr-0.5' />
+                    View Messages
+                  </Button>
+                </Link>
               )}
             </div>
           </div>
