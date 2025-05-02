@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useLocation } from 'react-router';
 import { InboxList } from '../../components/common/InboxList';
 import { ProfilePanel } from '../../components/common/ProfilePanel';
 import { ChatWindow } from '../../components/common/ChatWindow';
@@ -9,13 +9,13 @@ import { UserMessageService } from '../../service/user/message/userMessage';
 import { UserInforService } from '../../service/user/userInforService';
 import { DEFAULT_AVATAR_URL, DEFAULT_AVATAR_FILENAME } from '../../constant/general';
 export const ChatWithFriend = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+  const { tempUser } = location.state || {}; // Get the tempUser from the state
   const { friendId } = useParams();
-
   const [inboxList, setInboxList] = useState([]);
   const [userId, setUserId] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
-  console.log('InboxList', inboxList);
 
   useEffect(() => {
     const fetchInbox = async () => {
@@ -45,6 +45,13 @@ export const ChatWithFriend = () => {
           })
         );
 
+        if (tempUser) {
+          const isUserInInbox = updatedInbox.some((friend) => friend.friendId === tempUser.friendId);
+          if (!isUserInInbox) {
+            updatedInbox.unshift(tempUser);
+          }
+        }
+
         setInboxList(updatedInbox);
       } catch (error) {
         console.error('Error fetching inbox:', error);
@@ -73,7 +80,6 @@ export const ChatWithFriend = () => {
 
   // Function to update the inbox list
   const updateInboxList = useCallback((friendId, message, sentByMe, sentByAnotherFriend) => {
-    console.log('updateInboxList called with:', friendId, message, sentByMe, sentByAnotherFriend);
     setInboxList((prevInboxList) => {
       const updatedInbox = prevInboxList.map((item) =>
         item.friendId === friendId
@@ -113,7 +119,7 @@ export const ChatWithFriend = () => {
         friendAvatarUrl={friendAvatarUrl}
       />
 
-      <ProfilePanel friendName={currentFriendName} friendAvatarUrl={friendAvatarUrl} />
+      <ProfilePanel friendId={friendId} friendName={currentFriendName} friendAvatarUrl={friendAvatarUrl} />
     </div>
   );
 };

@@ -67,9 +67,9 @@ export const Header = () => {
       {isAuth ? (
         <div className='flex gap-4'>
           {/* Chat Button */}
-          <button className='p-3 cursor-pointer bg-gray-100 rounded-full hover:bg-gray-200'>
+          <Link to='/chat' className='p-3 cursor-pointer bg-gray-100 rounded-full hover:bg-gray-200'>
             <MessageSquare className='w-5 h-5 text-gray-700' />
-          </button>
+          </Link>
 
           {/* Notification Button */}
           <div className='relative'>
