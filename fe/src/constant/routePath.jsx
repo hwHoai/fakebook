@@ -6,5 +6,6 @@ export const ROUTE_PATH = {
   LOGIN: '/login',
   CHAT: '/chat',
   CHAT_WITH_FRIEND: '/chat/:friendId',
-  PROFILE: '/profile/:profileUserId'
+  PROFILE: '/profile/:profileUserId',
+  SEARCH_RESULT: '/search'
 };

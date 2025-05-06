@@ -4,6 +4,7 @@ import { LoginPage } from '../screen/login/LoginPage';
 import { RegisterPage } from '../screen/register/RegisterPage';
 import { Test } from '../screen/test/Test';
 import { ProfilePage } from '../screen/profile/ProfilePage';
+import { SearchResultPage } from '../screen/search/SearchResultPage';
 
 export const publicRoute = [
   {
@@ -34,6 +35,12 @@ export const publicRoute = [
     id: 'profile',
     path: ROUTE_PATH.PROFILE,
     element: <ProfilePage />,
+    index: true
+  },
+  {
+    id: 'search_result',
+    path: ROUTE_PATH.SEARCH_RESULT,
+    element: <SearchResultPage />,
     index: true
   }
 ];

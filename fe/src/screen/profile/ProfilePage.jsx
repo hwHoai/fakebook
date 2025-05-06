@@ -59,12 +59,12 @@ export const ProfilePage = () => {
   };
 
   const handleFollowClick = async () => {
-    const request = await UserInforService.followAnotherUser(userId, profileUserId);
+    await UserInforService.followAnotherUser(userId, profileUserId);
 
     setIsFollowed(!isFollowed);
   };
   const handleUnfollowClick = async () => {
-    const request = await UserInforService.unfollowAnotherUser(userId, profileUserId);
+    await UserInforService.unfollowAnotherUser(userId, profileUserId);
     setIsFollowed(!isFollowed);
   };
   useEffect(() => {
@@ -85,7 +85,7 @@ export const ProfilePage = () => {
     try {
       const request = UserInforService.getPublicUserInfo(profileUserId);
       request.then((userInfo) => {
-        if (userInfo.userProfileImage == DEFAULT_AVATAR_FILENAME) {
+        if (userInfo.userProfileImage == DEFAULT_AVATAR_FILENAME || userInfo.userProfileImage === null) {
           setUserProfileInfo({ ...userInfo, userProfileImage: DEFAULT_AVATAR_URL });
         } else {
           const avatarUrl = UserInforService.getFileFormFirebase(userInfo.userProfileImage);
@@ -110,6 +110,21 @@ export const ProfilePage = () => {
 
     checkFollowStatus();
   }, [userId, profileUserId]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setPostList([]);
+
+        const newPost = await FeedService.getUserFeed(profileUserId);
+        setPostList(newPost);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchPosts();
+  }, [profileUserId]);
 
   return (
     <div className='max-w-screen max-h-screen'>
