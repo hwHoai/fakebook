@@ -1,10 +1,16 @@
 package com.ooadproj.application.service.userService;
 
 import com.ooadproj.domain.model.dto.res.UserPublicInfo;
+import com.ooadproj.domain.model.dto.res.SearchUserInfo;
+import com.ooadproj.domain.model.dto.res.SearchUserProfile;
 import com.ooadproj.domain.model.entity.user.UserEntity;
 import com.ooadproj.domain.repository.user.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserInfoService {
@@ -80,5 +86,27 @@ public class UserInfoService {
 
         // Check if the profile user is in the user's following list
         return user.getFollowingList().contains(profileUser);
+    }
+
+
+    public List<SearchUserInfo> searchUsers(String query) {
+        Pageable pageable = PageRequest.of(0, 4); // Limit results to top 5
+        List<UserEntity> users = userEntityRepository.searchByQuery(query, pageable);
+        return users.stream()
+                .map(SearchUserInfo::new) // Convert UserEntity to SearchUserInfo
+                .toList();
+    }
+
+    public List<SearchUserProfile> searchUserProfile(String query, Long currentUserId) {
+        List<UserEntity> users = userEntityRepository.searchByQuery(query, null); // Fetch all matching results
+        UserEntity currentUser = userEntityRepository.findById(currentUserId)
+                .orElseThrow(() -> new RuntimeException("Current user not found"));
+
+        return users.stream()
+                .map(user -> {
+                    boolean isFollowed = currentUser.getFollowingList().contains(user);
+                    return new SearchUserProfile(user, isFollowed);
+                })
+                .toList();
     }
 }

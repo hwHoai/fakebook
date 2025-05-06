@@ -6,6 +6,9 @@ import com.ooadproj.application.service.userService.UserRegisterService;
 import com.ooadproj.domain.model.dto.req.FollowRequest;
 import com.ooadproj.domain.model.dto.req.LoginReqBody;
 import com.ooadproj.domain.model.dto.res.UserPublicInfo;
+import com.ooadproj.domain.model.dto.res.SearchUserInfo;
+import com.ooadproj.domain.model.dto.res.SearchUserProfile;
+
 import com.ooadproj.domain.model.key.JwtToken;
 import com.ooadproj.domain.model.entity.user.UserEntity;
 import com.ooadproj.infracstructure.security.AuthUtils;
@@ -20,6 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Controller
 @RestController
@@ -96,6 +100,28 @@ public class UserController {
         try {
             Boolean isFollowing = userInfoService.checkFollow(userId, profileUserId);
             return ResponseEntity.status(HttpStatus.OK).body(isFollowing);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<SearchUserInfo>> searchUsers(@RequestParam String query) {
+        System.out.println("query: " + query);
+        try {
+            List<SearchUserInfo> users = userInfoService.searchUsers(query);
+            return ResponseEntity.status(HttpStatus.OK).body(users);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/search_profile")
+    public ResponseEntity<List<SearchUserProfile>> searchUsers(@RequestParam String query,  @RequestParam String userId) {
+        Long currentUserIdLong = Long.parseLong(userId);
+        try {
+            List<SearchUserProfile> users = userInfoService.searchUserProfile(query, currentUserIdLong);
+            return ResponseEntity.status(HttpStatus.OK).body(users);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }

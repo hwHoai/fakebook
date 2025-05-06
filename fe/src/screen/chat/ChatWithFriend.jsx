@@ -36,7 +36,7 @@ export const ChatWithFriend = () => {
         // Process each friend's avatar
         const updatedInbox = await Promise.all(
           inbox.map(async (friend) => {
-            if (friend.friendAvatar === DEFAULT_AVATAR_FILENAME) {
+            if (friend.friendAvatar === DEFAULT_AVATAR_FILENAME || friend.friendAvatar === null) {
               return { ...friend, friendAvatarUrl: DEFAULT_AVATAR_URL };
             } else {
               const avatarUrl = await UserInforService.getFileFormFirebase(friend.friendAvatar);

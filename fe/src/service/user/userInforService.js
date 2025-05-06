@@ -76,4 +76,22 @@ export class UserInforService {
       Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
     });
   };
+
+  static searchUser = async (query) => {
+    return request({
+      url: `user/search`,
+      method: 'get',
+      params: { query },
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+    });
+  };
+
+  static searchUserProfile = async (query, userId) => {
+    return request({
+      url: `user/search_profile`,
+      method: 'get',
+      params: { query, userId },
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+    });
+  };
 }
