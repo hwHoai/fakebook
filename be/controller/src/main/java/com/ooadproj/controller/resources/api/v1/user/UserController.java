@@ -127,5 +127,25 @@ public class UserController {
         }
     }
 
+    @GetMapping("/recommend/{userId}")
+    public ResponseEntity<List<SearchUserProfile>> getRecommendedUsers(@PathVariable Long userId) {
+        try {
+            List<SearchUserProfile> recommendedUsers = userInfoService.getRecommendedUsers(userId);
+            return ResponseEntity.status(HttpStatus.OK).body(recommendedUsers);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/contacts/{userId}")
+    public ResponseEntity<List<SearchUserProfile>> getContacts(@PathVariable Long userId) {
+        try {
+            List<SearchUserProfile> contacts = userInfoService.getContacts(userId);
+            return ResponseEntity.status(HttpStatus.OK).body(contacts);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 
 }

@@ -88,6 +88,8 @@ public class UserEntity {
     @JoinTable(name = "user_share",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "feed_id"))
+
+
     private List<FeedEntity> feedShared;
 
     public Long getId() {

@@ -42,6 +42,9 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
             "OR (LOWER(CONCAT(u.firstName, ' ', u.lastName)) LIKE LOWER(CONCAT('%', :query, '%')))")
     List<UserEntity> searchByQuery(@Param("query") String query, Pageable pageable);
 
+    @Query("SELECT u FROM UserEntity u ORDER BY SIZE(u.followerList) DESC")
+    List<UserEntity> findTopUsersByFollowerCount(Pageable pageable);
+
 
     // DELETE
 }
