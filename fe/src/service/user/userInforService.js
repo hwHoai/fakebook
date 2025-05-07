@@ -94,4 +94,20 @@ export class UserInforService {
       Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
     });
   };
+
+  static getRecommendUsers = async (userId) => {
+    return request({
+      url: `user/recommend/${userId}`,
+      method: 'get',
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+    });
+  };
+
+  static getContacts = async (userId) => {
+    return request({
+      url: `user/contacts/${userId}`,
+      method: 'get',
+      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+    });
+  };
 }

@@ -4,18 +4,23 @@ import com.ooadproj.domain.model.dto.res.UserPublicInfo;
 import com.ooadproj.domain.model.dto.res.SearchUserInfo;
 import com.ooadproj.domain.model.dto.res.SearchUserProfile;
 import com.ooadproj.domain.model.entity.user.UserEntity;
+import com.ooadproj.domain.repository.message.MessageEntityRepository;
 import com.ooadproj.domain.repository.user.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+
+import java.util.stream.Collectors;
 
 @Service
 public class UserInfoService {
     @Autowired
     private UserEntityRepository userEntityRepository;
+    @Autowired
+    private MessageEntityRepository messageEntityRepository;
 
     public String getUsernameById(Long id) {
         return userEntityRepository.findById(id)
@@ -109,4 +114,85 @@ public class UserInfoService {
                 })
                 .toList();
     }
+
+
+    public List<SearchUserProfile> getRecommendedUsers(Long currentUserId) {
+        UserEntity currentUser = userEntityRepository.findById(currentUserId)
+                .orElseThrow(() -> new RuntimeException("Current user not found"));
+
+        // Refresh the following list from the database
+        List<UserEntity> updatedFollowingList = userEntityRepository.findById(currentUserId)
+                .orElseThrow(() -> new RuntimeException("Current user not found"))
+                .getFollowingList();
+
+        // Get the list of users followed by the current user's friends
+        List<UserEntity> friends = currentUser.getFollowingList();
+        Map<UserEntity, Long> followedByFriendsCount = friends.stream()
+                .flatMap(friend -> friend.getFollowingList().stream()) // Get users followed by each friend
+                .filter(user -> !user.equals(currentUser)) // Exclude the current user
+                .filter(user -> !updatedFollowingList.contains(user)) // Exclude already-followed users
+                .collect(Collectors.groupingBy(user -> user, Collectors.counting())); // Count occurrences
+
+        // Sort by count in descending order and limit to top 3
+        List<SearchUserProfile> recommendedUsers = followedByFriendsCount.entrySet().stream()
+                .sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue()))
+                .limit(3)
+                .map(entry -> new SearchUserProfile(entry.getKey(), false)) // Map to DTO
+                .toList();
+
+        // If no recommendations from friends, fallback to users with the most followers
+        if (recommendedUsers.isEmpty()) {
+            List<UserEntity> mostFollowedUsers = userEntityRepository.findTopUsersByFollowerCount(PageRequest.of(0, 3));
+            recommendedUsers = mostFollowedUsers.stream()
+                    .filter(user -> !user.getId().equals(currentUser.getId())) // Exclude the current user
+                    .filter(user -> !updatedFollowingList.contains(user)) // Exclude already-followed users
+                    .map(user -> new SearchUserProfile(user, false)) // Map to DTO
+                    .toList();
+        }
+
+        return recommendedUsers;
+    }
+
+
+    public List<SearchUserProfile> getContacts(Long currentUserId) {
+        UserEntity currentUser = userEntityRepository.findById(currentUserId)
+                .orElseThrow(() -> new RuntimeException("Current user not found"));
+
+        // Tập ID đã thấy để tránh trùng
+        Set<Long> seenUserIds = new HashSet<>();
+
+        // Step 1: Fetch recent chat users
+        List<UserEntity> recentChatUsers = messageEntityRepository.findUserInbox(currentUserId).stream()
+                .map(message -> {
+                    UserEntity other = message.getSender().getId().equals(currentUserId)
+                            ? message.getReceiver()
+                            : message.getSender();
+                    return other;
+                })
+                .filter(user -> seenUserIds.add(user.getId())) // lọc trùng theo userId
+                .limit(5)
+                .toList();
+
+        // Step 2: If less than 5, fetch recently followed users
+        List<UserEntity> contactRecommendations = new ArrayList<>(recentChatUsers);
+        if (contactRecommendations.size() < 5) {
+            List<UserEntity> followingList = currentUser.getFollowingList();
+            List<UserEntity> recentFollowedUsers = followingList.stream()
+                    .sorted(Comparator.comparing(UserEntity::getId).reversed()) // giả định ID tăng dần theo thời gian
+                    .filter(user -> seenUserIds.add(user.getId())) // tránh trùng
+                    .limit(5 - contactRecommendations.size())
+                    .toList();
+            contactRecommendations.addAll(recentFollowedUsers);
+        }
+
+        // Step 3: Map to SearchUserProfile
+        Set<Long> followingIds = currentUser.getFollowingList().stream()
+                .map(UserEntity::getId)
+                .collect(Collectors.toSet());
+
+        return contactRecommendations.stream()
+                .map(user -> new SearchUserProfile(user, followingIds.contains(user.getId())))
+                .toList();
+    }
+
 }
