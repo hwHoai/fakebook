@@ -13,14 +13,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.List;
 
-@Data
+//@Data
 @Entity
 @EntityScan
 @EnableJpaRepositories
 @Table(name = "user_info")
 @DynamicInsert
 @DynamicUpdate
-@ToString(exclude = {"keyTokenList", "ownFeedList", "feedCommentList", "followerList", "followingList", "newFeedList"})
+//@ToString(exclude = {"keyTokenList", "ownFeedList", "feedCommentList", "followerList", "followingList", "newFeedList"})
 public class UserEntity {
 
     @Id
@@ -52,7 +52,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "userId", cascade = CascadeType.DETACH)
     private List<FeedEntity> ownFeedList;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "new_feed",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "feed_id"))
@@ -66,6 +66,7 @@ public class UserEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id"))
     private List<UserEntity> followerList;
+
     @ManyToMany(mappedBy = "followerList")
     private List<UserEntity> follower;
 

@@ -5,7 +5,7 @@ export class UserAuthenticationService {
     return request({
       url: 'user/login',
       method: 'post',
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       data: data
     });
   };
@@ -13,8 +13,17 @@ export class UserAuthenticationService {
     return request({
       url: 'user/register',
       method: 'post',
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       data: data
+    });
+  };
+
+  static reNewToken = (refToken) => {
+    return request({
+      url: 'user/renew_tokens',
+      method: 'post',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      data: { refToken }
     });
   };
 
@@ -22,7 +31,7 @@ export class UserAuthenticationService {
   //   return request({
   //     url: '/api/v1/user/register',
   //     method: 'post',
-  //     Headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+  //     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
   //     data: data
   //   });
   // };

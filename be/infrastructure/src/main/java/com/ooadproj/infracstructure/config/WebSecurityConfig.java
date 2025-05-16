@@ -38,6 +38,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/v1/user/userInfo**").authenticated()
                         .requestMatchers("/**").anonymous()
                         .requestMatchers(HttpMethod.POST, "/**").anonymous()
+                        .requestMatchers(HttpMethod.PATCH, "/**").anonymous()
 
                 )
                 .securityMatcher("/api/v1/**")
@@ -52,7 +53,7 @@ public class WebSecurityConfig {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
     configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-    configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+    configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "PATCH"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;

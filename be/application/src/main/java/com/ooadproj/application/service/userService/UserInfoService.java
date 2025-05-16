@@ -195,4 +195,9 @@ public class UserInfoService {
                 .toList();
     }
 
+    public void updateUserAvatarById(Long id, String imgName) {
+        System.out.println("RECEIVED ID: " + id + " AND IMG NAME: " + imgName);
+        userEntityRepository.updateUserAvatarById(id, imgName);
+    }
+
 }

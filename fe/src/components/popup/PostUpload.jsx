@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { UserInfoProvider } from '../layout/provider/provider';
 import { CookieService } from '../../util/cookieService';
 import { TokenService } from '../../util/tokenService';
-import { FeedService } from '../../service/feed/feedService';
+import { FeedService } from '../../service/server/feed/feedService';
 import { firebaseStorage } from '../../config/firebaseStorage';
 import { ref, uploadBytes, uploadString } from 'firebase/storage';
 import { UserInforService } from '../../service/user/userInforService';
@@ -73,8 +73,8 @@ export const PostUpload = ({ isOpen, onClose }) => {
       // Upload files to Firebase Storage
       files.forEach((file) => {
         (async () => {
-          const storageRef = `images/${userId}/${formData.listImageString}/${file.url.split('/').slice(-1)[0]}`
-          const fileUpload = await UserInforService.uploadImgaeToFirebase(storageRef, file.url);
+          const storageRef = `images/${userId}/${formData.listImageString}/${file.url.split('/').slice(-1)[0]}`;
+          const fileUpload = await UserInforService.uploadImageToFirebase(storageRef, file.url);
           console.log(fileUpload);
         })();
       });

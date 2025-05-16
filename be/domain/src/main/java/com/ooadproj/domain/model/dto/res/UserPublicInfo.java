@@ -3,16 +3,26 @@ package com.ooadproj.domain.model.dto.res;
 import com.ooadproj.domain.model.entity.user.UserEntity;
 
 public class UserPublicInfo {
+    private Long userId;
     private String userName;
     private String userEmail;
     private String phoneNumber;
     private String userProfileImage;
 
     public UserPublicInfo(UserEntity userEntity) {
+        this.userId = userEntity.getId();
         this.userName = userEntity.getFirstName() + " " + userEntity.getLastName();
         this.userEmail = userEntity.getUserEmail();
         this.phoneNumber = userEntity.getPhoneNumber();
         this.userProfileImage = userEntity.getAvatar();
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {

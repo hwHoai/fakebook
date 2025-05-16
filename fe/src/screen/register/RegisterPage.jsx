@@ -6,31 +6,39 @@ import register_background from '../../assets/img/register_background.png';
 import { UserAuthenticationService } from '../../service/user/auth/userAuthentication';
 import { TokenService } from '../../util/tokenService';
 import { CookieService } from '../../util/cookieService';
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext } from 'react';
 import { AuthProvider } from '../../components/layout/provider/provider';
+import { ERRORCODE } from '../../constant/code';
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
   const loginContext = useContext(AuthProvider);
 
-  useEffect(() => {
-    if (loginContext.isAuth) {
-      navigate('/newfeed');
-    }
-  });
-
   const handleRegisterUser = async (values, { setSubmitting }) => {
+    console.log('Registering user with values:', values);
     try {
-      console.log(values);
       const tokens = await UserAuthenticationService.signUp(values);
-      console.log(tokens);
+      if (!tokens) {
+        throw new Error({ message: 'Token is null', code: ERRORCODE.TOKEN_NULL });
+      }
+
       for (const key in tokens) {
         const tokenPayload = TokenService.decodeToken(tokens[key]);
         const tokenExpire = new Date(tokenPayload.exp * 1000);
         CookieService.setCookie(key, tokens[key], tokenExpire);
       }
+
       loginContext.setIsAuth(true);
       navigate('/');
+      window.location.reload();
+    } catch (error) {
+      switch (error.code) {
+        case ERRORCODE.TOKEN_NULL:
+          alert('Token is null');
+          break;
+        default:
+          console.error('An unexpected error occurred:', error);
+      }
     } finally {
       setSubmitting(false);
     }

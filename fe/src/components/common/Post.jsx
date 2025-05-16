@@ -84,10 +84,6 @@ export const Post = memo(function Post({ postArgs, onPostClick }) {
     })();
   }, [avatarImgUrl, user.userProfileImage, authorId]);
 
-  console.log('media', media);
-
-  console.log('postArgs', postArgs);
-
   const displayedMedia = media.slice(0, 4); // Show only 4 items
   const extraMediaCount = media.length - 4;
 
@@ -101,7 +97,7 @@ export const Post = memo(function Post({ postArgs, onPostClick }) {
       {/* Header */}
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-3'>
-          <img src={avatarImgUrl} alt='Avatar' className='w-10 h-10 rounded-full' />
+          <img src={avatarImgUrl} alt='Avatar' className='w-10 h-10 rounded-full object-cover' />
           <div>
             <p className='font-bold'>{user.userName}</p>
             <p onClick={onPostClick} className='text-sm cursor-pointer text-gray-500'>

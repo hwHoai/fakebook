@@ -1,10 +1,12 @@
 package com.ooadproj.domain.repository.user;
 
 import com.ooadproj.domain.model.entity.feed.FeedEntity;
+import com.ooadproj.domain.model.entity.key.AuthenticationKeyEntity;
 import com.ooadproj.domain.model.entity.user.UserEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -33,6 +35,16 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
 
     @Modifying
     @Transactional
+    @Query("UPDATE UserEntity user SET user.avatar = ?2 WHERE user.id = ?1")
+    void updateUserAvatarById(Long id, String imgName);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE UserEntity user SET user.keyTokenList = ?2 WHERE user.id = ?1")
+    void updateKeyTokenById(Long id, List<AuthenticationKeyEntity> keyTokenList);
+
+    @Modifying
+    @Transactional
     @Query("UPDATE UserEntity user SET user.newFeedList = ?2 WHERE user.id = ?1")
     void updateIdNewFeedList(Long followerId, List<FeedEntity> newFeedList);
 
@@ -47,4 +59,8 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
 
 
     // DELETE
+    @Modifying
+    @Transactional
+    @NativeQuery("DELETE FROM new_feed WHERE user_id = :userId AND feed_id = :feedId")
+    void removeNewFeedById(Long userId, Long feedId);
 }

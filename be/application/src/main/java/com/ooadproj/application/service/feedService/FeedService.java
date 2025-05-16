@@ -7,6 +7,7 @@ import com.ooadproj.domain.model.entity.feed.FeedEntity;
 import com.ooadproj.domain.model.entity.user.UserEntity;
 import com.ooadproj.domain.repository.feed.FeedEntityRepository;
 import com.ooadproj.domain.repository.user.UserEntityRepository;
+import org.apache.catalina.User;
 import org.aspectj.weaver.ast.Literal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -96,6 +97,8 @@ public class FeedService {
                         feed.getUpdatedAt()
                 );
                 response.add(feedResponse);
+                //Remove the feed from the new feed list
+//                userEntityRepository.removeNewFeedById(userId, feed.getId());
             }
             return response;
         } catch (Exception e) {
@@ -156,6 +159,7 @@ public class FeedService {
             for (FeedEntity feed : top10LatestFeed) {
                 if (!oldFeedList.contains(feed)) {
                     newFeedList.add(feed);
+                    System.out.println("Adding new feed: " + newFeedList); // Không được xoá
                 }
             }
                 oldFeedList.addAll(newFeedList);
@@ -191,6 +195,7 @@ public class FeedService {
                         feed.getUpdatedAt()
                 );
                 response.add(feedResponse);
+                //Remove the feed from the new feed list
             }
             return response;
         } catch (Exception e) {

@@ -5,6 +5,8 @@ import com.ooadproj.application.service.userService.UserLoginService;
 import com.ooadproj.application.service.userService.UserRegisterService;
 import com.ooadproj.domain.model.dto.req.FollowRequest;
 import com.ooadproj.domain.model.dto.req.LoginReqBody;
+import com.ooadproj.domain.model.dto.req.RenewTokenReqBody;
+import com.ooadproj.domain.model.dto.req.UpdateAvatarReqBody;
 import com.ooadproj.domain.model.dto.res.UserPublicInfo;
 import com.ooadproj.domain.model.dto.res.SearchUserInfo;
 import com.ooadproj.domain.model.dto.res.SearchUserProfile;
@@ -42,7 +44,6 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<JwtToken> registerUser(@RequestBody UserEntity user) {
         try {
-
             JwtToken tokens = userRegisterService.registerUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(tokens);
         } catch (Exception e) {
@@ -57,6 +58,17 @@ public class UserController {
             JwtToken tokens = userLoginService.loginByEmail(loginInfo.getUserEmail(), loginInfo.getPassword());
 
             return ResponseEntity.status(HttpStatus.OK).body(tokens);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostAuthorize("permitAll()")
+    @PostMapping("/renew_tokens")
+    public ResponseEntity<JwtToken> renewToken(@RequestBody RenewTokenReqBody refToken) {
+        try {
+            JwtToken tokens = userLoginService.renewToken(refToken.getRefToken());
+            return ResponseEntity.status(HttpStatus.CREATED).body(tokens);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
@@ -144,6 +156,19 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(contacts);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostAuthorize("permitAll()")
+    @PatchMapping("/update/user_avatar")
+    public ResponseEntity<String> updateUserAvatar(@RequestBody UpdateAvatarReqBody updateAvatarReqBody) {
+        try {
+            Long userId = updateAvatarReqBody.getUserId();
+            String avatar = updateAvatarReqBody.getAvatarName();
+            userInfoService.updateUserAvatarById(userId, avatar);
+            return ResponseEntity.status(HttpStatus.OK).body("User avatar updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 

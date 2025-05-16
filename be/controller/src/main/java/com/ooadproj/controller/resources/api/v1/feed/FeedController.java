@@ -37,6 +37,7 @@ public class FeedController {
     public ResponseEntity<List<GetNewFeedResponse>>  getNewFeeds(@RequestParam Long userId) {
         try {
             List<GetNewFeedResponse> newFeeds = feedService.getNewFeeds(userId);
+            System.out.println("-----------------------------------------------------------------\n" + newFeeds.size() + "\n-----------------------------------------------------------------");
             return ResponseEntity.status(200).body(newFeeds);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);

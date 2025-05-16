@@ -7,13 +7,13 @@ import { UserInfoProvider } from '../layout/provider/provider';
 export const PostBox = () => {
   const { t } = useTranslation();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const {userAvatarUrl} = useContext(UserInfoProvider);
+  const { userPublicInfo } = useContext(UserInfoProvider);
 
   return (
     <div className='w-140 bg-[#f3ecfe] p-4 rounded-2xl'>
       <div className='flex items-center gap-3'>
         {/* Avatar */}
-        <img src={userAvatarUrl} alt='User Avatar' className='w-10 h-10 rounded-full' />
+        <img src={userPublicInfo.userAvatarUrl} alt='User Avatar' className='w-10 h-10 rounded-full object-cover' />
 
         {/* Input Field */}
         <div
