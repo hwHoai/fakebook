@@ -7,9 +7,11 @@
         <groupId>com.ooadproj</groupId>
         <artifactId>fakebook</artifactId>
         <version>1.0-SNAPSHOT</version>
-    </parent>
 
+    </parent>
+    <groupId>com.ooadproj</groupId>
     <artifactId>domain</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
@@ -29,8 +31,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>annotationProcessor</scope>
         </dependency>
+
     </dependencies>
 
 

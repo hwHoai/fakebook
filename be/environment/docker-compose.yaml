@@ -1,0 +1,40 @@
+name: fakebook
+services:
+  be:
+    ports:
+      - "${BE_PORT}:${BE_PORT}"
+    depends_on:
+      database:
+        condition: service_healthy
+    build:
+        context: ../
+        dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://${DB_HOST_NAME}:${DB_PORT}/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    networks:
+        - fakebook-backend-network
+  database:
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    hostname: ${DB_HOST_NAME}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    image: mysql:latest
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - fakebook_db:/var/lib/mysql
+    networks:
+      - fakebook-backend-network
+volumes:
+    fakebook_db:
+networks:
+  fakebook-backend-network: {}
