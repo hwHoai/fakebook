@@ -9,11 +9,11 @@ export class UserInforService {
     return request({
       url: `user/info/${userId}`,
       method: 'get',
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
     });
   };
 
-  static uploadImgaeToFirebase = async (storageRef, fileRef) => {
+  static uploadImageToFirebase = async (storageRef, fileRef) => {
     try {
       if (fileRef.startsWith('blob:')) {
         const firebaseRef = ref(firebaseStorage, storageRef);
@@ -41,7 +41,6 @@ export class UserInforService {
     try {
       const firebaseRef = ref(firebaseStorage, fileRef);
       return getDownloadURL(firebaseRef).then((url) => {
-        console.log('File url: ', url);
         return url;
       });
     } catch (error) {
@@ -55,7 +54,7 @@ export class UserInforService {
       url: `user/follow/${profileUserId}`,
       method: 'post',
       data: { userId },
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
     });
   };
 
@@ -64,7 +63,7 @@ export class UserInforService {
       url: `user/unfollow/${profileUserId}`,
       method: 'post',
       data: { userId },
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
     });
   };
 
@@ -73,7 +72,7 @@ export class UserInforService {
       url: `user/check_follow/${profileUserId}`,
       method: 'get',
       params: { userId },
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` }
     });
   };
 
@@ -82,7 +81,7 @@ export class UserInforService {
       url: `user/search`,
       method: 'get',
       params: { query },
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
     });
   };
 
@@ -91,7 +90,7 @@ export class UserInforService {
       url: `user/search_profile`,
       method: 'get',
       params: { query, userId },
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
     });
   };
 
@@ -99,7 +98,7 @@ export class UserInforService {
     return request({
       url: `user/recommend/${userId}`,
       method: 'get',
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
     });
   };
 
@@ -107,7 +106,16 @@ export class UserInforService {
     return request({
       url: `user/contacts/${userId}`,
       method: 'get',
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+    });
+  };
+
+  static updateUserAvatar = async (userId, avatarName) => {
+    return request({
+      url: `user/update/user_avatar`,
+      method: 'patch',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` },
+      data: { userId, avatarName }
     });
   };
 }

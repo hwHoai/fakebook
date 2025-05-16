@@ -12,7 +12,6 @@ export const MediaUploader = ({ files, setFiles }) => {
   // Xử lý khi chọn file
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
-
     const newFiles = selectedFiles.map((file) => ({
       url: URL.createObjectURL(file),
       type: file.type.startsWith('video') ? 'video' : 'image'

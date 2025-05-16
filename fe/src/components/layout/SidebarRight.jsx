@@ -26,10 +26,11 @@ export const SidebarRight = () => {
     const fetchAvatars = async () => {
       const updatedRecommendation = await Promise.all(
         recommendUsers.map(async (user) => {
+          console.log('user', user);
           if (user.avatar === DEFAULT_AVATAR_FILENAME || user.avatar === null) {
             return { ...user, userProfileImageUrl: DEFAULT_AVATAR_URL };
           } else {
-            const avatarUrl = await UserInforService.getFileFormFirebase(user.userProfileImage);
+            const avatarUrl = await UserInforService.getFileFormFirebase(`images/${user.id}/avatar/${user.avatar}`);
             return { ...user, userProfileImageUrl: avatarUrl };
           }
         })
@@ -48,7 +49,7 @@ export const SidebarRight = () => {
           if (user.avatar === DEFAULT_AVATAR_FILENAME || user.avatar === null) {
             return { ...user, userProfileImageUrl: DEFAULT_AVATAR_URL };
           } else {
-            const avatarUrl = await UserInforService.getFileFormFirebase(user.userProfileImage);
+            const avatarUrl = await UserInforService.getFileFormFirebase(`images/${user.id}/avatar/${user.avatar}`);
             return { ...user, userProfileImageUrl: avatarUrl };
           }
         })
@@ -154,7 +155,7 @@ export const SidebarRight = () => {
               className='flex items-center justify-between cursor-pointer hover:bg-gray-200 rounded-md px-2 py-2'
             >
               <div className='flex items-center gap-3 relative'>
-                <img src={user.userProfileImageUrl} className='w-8 h-8 rounded-full' />
+                <img src={user.userProfileImageUrl} className='w-8 h-8 rounded-full object-cover' />
 
                 <span className='text-gray-700 text-sm'>{user.name}</span>
               </div>

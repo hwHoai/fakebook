@@ -21,7 +21,7 @@ export const Header = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { t } = useTranslation();
   const profileButtonRef = useRef(null);
-  const { userAvatarUrl } = useContext(UserInfoProvider);
+  const { userPublicInfo } = useContext(UserInfoProvider);
   const suggestionBoxRef = useRef(null);
   const navigate = useNavigate();
   const [userSuggestions, setUserSuggestions] = useState([]);
@@ -176,7 +176,7 @@ export const Header = () => {
             }}
             className='relative cursor-pointer w-11 h-11'
           >
-            <img src={userAvatarUrl} alt='Profile' className='w-full h-full rounded-full object-cover' />
+            <img src={userPublicInfo.userAvatarUrl} alt='Profile' className='w-full h-full rounded-full object-cover' />
             <ChevronDown className='absolute bottom-1 right-0 translate-x-1/3 bg-gray-100 p-1 rounded-full shadow-md w-5 h-5 text-gray-700' />
             <UserMenu
               isOpen={isUserMenuOpen}

@@ -1,5 +1,5 @@
-import { CookieService } from '../../util/cookieService';
-import request from '../../util/request';
+import { CookieService } from '../../../util/cookieService';
+import request from '../../../util/request';
 
 const token = CookieService.getCookie('accessToken');
 export class FeedService {
@@ -7,7 +7,7 @@ export class FeedService {
     return request({
       url: 'feed/create',
       method: 'post',
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` },
       data: data
     });
   };
@@ -16,7 +16,7 @@ export class FeedService {
     return request({
       url: 'feed/new_feeds',
       method: 'get',
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: `Bearer ${token}` },
       params: { userId }
     });
   };
@@ -24,14 +24,14 @@ export class FeedService {
     return request({
       url: 'feed/guest/new_feeds',
       method: 'get',
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
     });
   };
   static getUserFeed = (userId) => {
     return request({
       url: `feed/user_feeds/${userId}`,
       method: 'get',
-      Headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
     });
   };
 }

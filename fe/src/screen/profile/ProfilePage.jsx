@@ -1,54 +1,63 @@
 import { Camera } from 'lucide-react';
-import { useState, useRef } from 'react';
-import { useParams } from 'react-router';
+import { useState, useRef, useContext } from 'react';
+import { useLocation, useParams } from 'react-router';
 import { Header } from '../../components/layout/Header';
 import { PostBox } from '../../components/common/PostBox';
 import { useEffect } from 'react';
 import { TokenService } from '../../util/tokenService';
 import { CookieService } from '../../util/cookieService';
-import { FeedService } from '../../service/feed/feedService';
+import { FeedService } from '../../service/server/feed/feedService';
 import { Post } from '../../components/common/Post';
 import { MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UserInforService } from '../../service/user/userInforService';
-import { DEFAULT_AVATAR_URL, DEFAULT_AVATAR_FILENAME } from '../../constant/general';
 import { useNavigate, Link } from 'react-router';
+import { UserInfoProvider } from '../../components/layout/provider/provider';
 export const ProfilePage = () => {
   const navigate = useNavigate();
-  const [imageSrc, setImageSrc] = useState(null);
-  const authToken = CookieService.getCookie('accessToken');
-  const { userId } = TokenService.decodeToken(authToken) || {};
+  const { userId } = useLocation().pathname.split('/')[2];
   const [postList, setPostList] = useState([]);
   const fileInputRef = useRef(null);
   const { profileUserId } = useParams();
   const [isFollowed, setIsFollowed] = useState();
-  const [userProfileInfo, setUserProfileInfo] = useState({
-    userName: '',
-    userEmail: '',
-    phoneNumber: '',
-    userProfileImage: DEFAULT_AVATAR_FILENAME
-  });
+  const { userPublicInfo, dispatch } = useContext(UserInfoProvider);
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = () => setImageSrc(reader.result);
-    reader.readAsDataURL(file);
+    const imgRef = URL.createObjectURL(file);
+
+    if (file) {
+      // Upload the image to Firebase Storage
+      const storageRef = `images/${userId}/avatar/${file.name}`;
+      await UserInforService.uploadImageToFirebase(storageRef, imgRef);
+      console.log('imgRef', typeof file.name);
+      await UserInforService.updateUserAvatar(userId, file.name);
+      const avatarUrl = await UserInforService.getFileFormFirebase(storageRef);
+      console.log('avatarUrl', avatarUrl);
+      dispatch({
+        type: 'SET_USER_AVATAR_URL',
+        payload: {
+          userAvatarUrl: avatarUrl
+        }
+      });
+      dispatch({
+        type: 'SET_USER_AVATAR',
+        payload: {
+          userAvatar: file.name
+        }
+      });
+    }
   };
 
   const handleIconClick = () => {
     fileInputRef.current.click();
   };
-  // const handleOpenChat = () => {
-  //   const chatUrl = `/chat`; // Replace with your route
-  //   window.open(chatUrl, '_blank'); // Open in new tab
-  // };
 
   const handleMessageClick = () => {
     const tempUser = {
       friendId: Number(profileUserId),
-      friendUsername: userProfileInfo.userName,
-      friendAvatarUrl: userProfileInfo.userProfileImage,
+      friendUsername: userPublicInfo.userName,
+      friendAvatarUrl: userPublicInfo.userProfileImage,
       lastMessage: '',
       lastMessageTime: new Date().toISOString(),
       sentByMe: false,
@@ -70,32 +79,14 @@ export const ProfilePage = () => {
   useEffect(() => {
     (async () => {
       const newPost = await FeedService.getUserFeed(profileUserId).then((res) => {
-        return postList.concat(res);
+        console.log('res', res);
+        return res;
       });
 
       setPostList(newPost);
-      // if (postList.length > 50) {
-      //   const newPost = await FeedService.getNewFeed(userId);
-      //   setPostList(newPost);
-      // }
+      console.log('newPost', newPost);
     })();
   }, []);
-
-  useEffect(() => {
-    try {
-      const request = UserInforService.getPublicUserInfo(profileUserId);
-      request.then((userInfo) => {
-        if (userInfo.userProfileImage == DEFAULT_AVATAR_FILENAME || userInfo.userProfileImage === null) {
-          setUserProfileInfo({ ...userInfo, userProfileImage: DEFAULT_AVATAR_URL });
-        } else {
-          const avatarUrl = UserInforService.getFileFormFirebase(userInfo.userProfileImage);
-          setUserProfileInfo({ ...userInfo, userProfileImage: avatarUrl });
-        }
-      });
-    } catch (error) {
-      console.log('error', error);
-    }
-  }, [profileUserId]);
 
   useEffect(() => {
     const checkFollowStatus = async () => {
@@ -125,7 +116,6 @@ export const ProfilePage = () => {
 
     fetchPosts();
   }, [profileUserId]);
-
   return (
     <div className='max-w-screen max-h-screen'>
       <Header />
@@ -137,7 +127,7 @@ export const ProfilePage = () => {
         <div className='relative w-full px-10 pb-4 border-b-1 flex  -mt-10'>
           <div className='relative  min-w-32 min-h-32'>
             <img
-              src={userProfileInfo.userProfileImage}
+              src={userPublicInfo.userAvatarUrl}
               className='w-32 h-32 rounded-full object-cover border-4 border-white shadow-md'
               alt='avatar'
             />
@@ -157,7 +147,7 @@ export const ProfilePage = () => {
           </div>
           <div className='mt-15 ml-3  w-full flex justify-between'>
             <div className='flex  flex-col'>
-              <span className='block text-xl font-semibold'>{userProfileInfo.userName}</span>
+              <span className='block text-xl font-semibold'>{userPublicInfo.userName}</span>
               <div className='flex gap-1 mt-1'>
                 <div className='text-sm text-gray-500'>0 posts</div>
                 <div className='text-sm text-gray-500'>2 followers</div>

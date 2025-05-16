@@ -15,7 +15,7 @@ public interface FeedEntityRepository extends JpaRepository<FeedEntity, Long> {
     Optional<FeedEntity> findById(Long id);
 
     @Transactional
-    @Query("SELECT f FROM FeedEntity f ORDER BY f.createdAt DESC")
+    @Query("SELECT f FROM FeedEntity f ORDER BY f.createdAt DESC LIMIT 10")
     List<FeedEntity> findTop10ByOrderByCreatedAtDesc();
 
     @Transactional

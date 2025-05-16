@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { BRAND_NAME } from '../../constant/general';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { loginValidationSchema } from '../../validation/authValidaionSchema';
@@ -15,12 +15,6 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const loginContext = useContext(AuthProvider);
 
-  useEffect(() => {
-    if (loginContext.isAuth) {
-      navigate('/');
-    }
-  });
-
   const handleLogin = async (values, { setSubmitting }) => {
     try {
       console.log(values);
@@ -33,6 +27,7 @@ export const LoginPage = () => {
       }
       loginContext.setIsAuth(true);
       navigate('/');
+      window.location.reload();
     } finally {
       setSubmitting(false);
     }

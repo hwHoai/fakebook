@@ -1,11 +1,9 @@
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext, useCallback, useLayoutEffect } from 'react';
 import { Post } from '../../components/common/Post.jsx';
 import { PostBox } from '../../components/common/PostBox.jsx';
 import { PostDetail } from '../../components/popup/PostDetail.jsx';
-import { AuthProvider } from '../../components/layout/provider/provider.js';
-import { FeedService } from '../../service/feed/feedService.js';
-import { TokenService } from '../../util/tokenService.js';
-import { CookieService } from '../../util/cookieService.js';
+import { AuthProvider, UserInfoProvider } from '../../components/layout/provider/provider.js';
+import { FeedService } from '../../service/server/feed/feedService.js';
 import { Header } from '../../components/layout/Header.jsx';
 import { SidebarRight } from '../../components/layout/SidebarRight.jsx';
 import { SidebarLeft } from '../../components/layout/SidebarLeft.jsx';
@@ -15,21 +13,36 @@ export const NewFeedPage = () => {
   const [showPostDetail, setShowPostDetail] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const { isAuth } = useContext(AuthProvider);
-  const authToken = CookieService.getCookie('accessToken');
-  const { userId } = TokenService.decodeToken(authToken) || {};
+  const { userPublicInfo } = useContext(UserInfoProvider) || {};
   const [postList, setPostList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [scrollEnd, setScrollEnd] = useState(false);
 
+  const handlePostClick = useCallback(
+    (post) => {
+      setSelectedPost(post);
+      setShowPostDetail(true);
+    },
+    [setSelectedPost, setShowPostDetail]
+  );
 
-  const handlePostClick = useCallback((post) => {
-    setSelectedPost(post);
-    setShowPostDetail(true);
-  }, [setSelectedPost, setShowPostDetail]);
-
-  const handleClosePostDetail = () => {
+  const handleClosePostDetail = useCallback(() => {
     setShowPostDetail(false);
     setSelectedPost(null);
-  };
+  }, [setShowPostDetail, setSelectedPost]);
+
+  const handleScrollEnd = useCallback(() => {
+    const scrollTop = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+
+    if (scrollTop + windowHeight >= documentHeight * 0.8) {
+      setScrollEnd(true);
+    }
+    if (scrollTop + windowHeight < documentHeight * 0.8) {
+      setScrollEnd((prev) => prev);
+    }
+  }, []);
 
   useEffect(() => {
     if (showPostDetail) {
@@ -39,28 +52,51 @@ export const NewFeedPage = () => {
     }
   }, [showPostDetail]);
 
-  useEffect(() => {
-    console.log('isAuth', isAuth);
+  useLayoutEffect(() => {
     (async () => {
-      const newPost = await isAuth
-        ? await FeedService.getNewFeed(userId).then((res) => {
-            return postList.concat(res);
-          })
-        : await FeedService.getNewFeedForGuest();
+      let newPost = null;
+      if (isAuth) {
+        newPost = await FeedService.getNewFeed(userPublicInfo.userId).then((res) => {
+          setTimeout(() => {
+            setLoading(false);
+          }, 3000);
+          return res;
+        });
+      } else {
+        newPost = await FeedService.getNewFeedForGuest().then((res) => {
+          setTimeout(() => {
+            setLoading(false);
+          }, 3000);
+          return res;
+        });
+      }
       setPostList(newPost);
-      if (postList.length > 50) {
-        const newPost = await FeedService.getNewFeed(userId);
+      if (postList.length > 20) {
+        const newPost = await FeedService.getNewFeed(userPublicInfo.userId).then((res) => {
+          setTimeout(() => {
+            setLoading(false);
+          }, 3000);
+          return res;
+        });
         setPostList(newPost);
       }
-      setTimeout(() => {
-        setLoading(false);
-      }, 3000);
     })();
-  }, []);
+  }, [isAuth, scrollEnd, postList.length, userPublicInfo.userId]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScrollEnd);
+    return () => {
+      window.removeEventListener('scroll', handleScrollEnd);
+    };
+  }, [handleScrollEnd]);
 
   return (
     <div className={`${loading ? ' overflow-hidden max-w-screen max-h-screen' : ''}`}>
-      {loading && <div className='fixed bg-accent-light w-full h-full z-[9999]'><Loading/></div>}
+      {loading && (
+        <div className='fixed bg-accent-light w-full h-full z-[9999]'>
+          <Loading />
+        </div>
+      )}
       {
         <>
           <Header />

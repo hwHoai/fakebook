@@ -1,9 +1,11 @@
 package com.ooadproj.application.service.userService;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ooadproj.application.service.feedService.FeedService;
 import com.ooadproj.domain.model.key.JwtToken;
 import com.ooadproj.domain.model.entity.key.AuthenticationKeyEntity;
 import com.ooadproj.domain.model.entity.user.UserEntity;
+import com.ooadproj.domain.repository.key.AuthenticationKeyEntityRepository;
 import com.ooadproj.domain.repository.user.UserEntityRepository;
 import com.ooadproj.infracstructure.errorHandler.exception.UserNotFoundException;
 import com.ooadproj.infracstructure.persistence.repository.key.JwtTokenServiceImpl;
@@ -25,6 +27,8 @@ public class UserLoginService {
     private UserEntityRepository userEntityRepository;
     @Autowired
     private FeedService feedService;
+    @Autowired
+    private AuthenticationKeyEntityRepository authenticationKeyEntityRepository;
 
     @PreAuthorize("permitAll()")
     public JwtToken loginByEmail(String email,String password) throws NoSuchAlgorithmException {
@@ -60,5 +64,34 @@ public class UserLoginService {
         //Update key in database
         userEntityRepository.updatePublicKeyAndRefreshToken(publicKeyString, tokens.getRefreshToken(), user);
         return  tokens;
+    }
+
+    @PreAuthorize("permitAll()")
+    public JwtToken renewToken (String refreshToken) throws Exception {
+        // check if refresh token is valid
+        AuthenticationKeyEntity authenticationKeyEntity = authenticationKeyEntityRepository.findByRefreshToken(refreshToken);
+        System.out.println("renewToken" + authenticationKeyEntity);
+        if(authenticationKeyEntity == null) {
+            throw new Exception("Refresh token not found");
+        }
+
+        // Verify refresh token
+        RSAKeyPairServiceImpl rsaKeyPairService = new RSAKeyPairServiceImpl();
+        JwtTokenServiceImpl jwtTokenService = new JwtTokenServiceImpl();
+        RSAPublicKey publicKey = rsaKeyPairService.fromPublicKeyString(authenticationKeyEntity.getPublicKey());
+        DecodedJWT decodedJWT = jwtTokenService.verifyToken(publicKey, refreshToken);
+        if(decodedJWT == null) {
+            throw new Exception("Decoded JWT is null");
+        }
+
+        // Generate new token
+        KeyPair keyPair = rsaKeyPairService.generateKeyPair();
+        RSAPublicKey newPublicKey = (RSAPublicKey) keyPair.getPublic();
+        RSAPrivateKey newPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
+        String newPublicKeyString = rsaKeyPairService.toPublicKeyString(newPublicKey);
+        JwtToken newTokens = jwtTokenService.generateToken(newPublicKey, newPrivateKey, authenticationKeyEntity.getUser().getId(), authenticationKeyEntity.getUser().getUserEmail());
+        userEntityRepository.updatePublicKeyAndRefreshToken(newPublicKeyString, newTokens.getRefreshToken(), authenticationKeyEntity.getUser());
+        System.out.println(" newPublicKeyString" + newPublicKeyString + " newTokens.getRefreshToken()" + newTokens.getRefreshToken());
+        return  newTokens;
     }
 }

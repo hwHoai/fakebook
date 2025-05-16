@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface AuthenticationKeyEntityRepository extends JpaRepository<AuthenticationKeyEntity, Long> {
     AuthenticationKeyEntity save(AuthenticationKeyEntity authenticationKeyEntity);
     Optional<AuthenticationKeyEntity> findByUserId(Long userId);
+    boolean existsByRefreshToken(String refreshToken);
+    AuthenticationKeyEntity findByRefreshToken (String refreshToken);
 }

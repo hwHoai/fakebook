@@ -4,11 +4,9 @@ import { Card } from '../ui/Card';
 import { CookieService } from '../../util/cookieService';
 import { UserInfoProvider } from '../layout/provider/provider';
 import { Link } from 'react-router';
-import { TokenService } from '../../util/tokenService';
 export const UserMenu = ({ isOpen, onClose, profileButtonRef }) => {
-  const token = CookieService.getCookie('accessToken');
-  const decodedToken = TokenService.decodeToken(token);
-  const currentUserId = decodedToken.userId;
+  const {userPublicInfo} = useContext(UserInfoProvider);
+  const userId = userPublicInfo.userId;
   UserMenu.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
@@ -50,7 +48,7 @@ export const UserMenu = ({ isOpen, onClose, profileButtonRef }) => {
     <Card ref={menuRef} className='absolute right-0 top-12 w-65 p-2 rounded-lg z-50'>
       <ul className=''>
         <Link
-          to={`/profile/${currentUserId}`}
+          to={`/profile/${userId}`}
           className='px-2 border-b-2 flex items-center rounded-lg py-2 hover:bg-gray-100 cursor-pointer'
         >
           <img src={userAvatarUrl} alt='User Avatar' className='w-7 h-7 rounded-full mr-2' />
