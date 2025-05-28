@@ -34,6 +34,7 @@ export const Post = memo(function Post({ postArgs, onPostClick }) {
     sharedUser,
     updatedAt
   } = postArgs;
+  console.log('postArgs', postArgs);
 
   const [media, setMedia] = useState([]);
 
@@ -41,6 +42,8 @@ export const Post = memo(function Post({ postArgs, onPostClick }) {
 
   useEffect(() => {
     (async () => {
+      if (!imagesUrl) return;
+
       const mediaUrls =
         new String(imagesUrl).split('___').map(async (imgName) => {
           const fireBaseRef = ref(firebaseStorage, `images/${authorId}/${imagesUrl}/${imgName}`);
@@ -89,6 +92,7 @@ export const Post = memo(function Post({ postArgs, onPostClick }) {
 
   // Convert media into lightbox-compatible format
   const lightboxSlides = media.map((item) => {
+    console.log('item', item);
     const isVideo = item.endsWith('.mp4') || item.endsWith('.mov') || item.endsWith('.webm');
     return isVideo ? { type: 'video', sources: [{ src: item, type: 'video/mp4' }] } : { src: item };
   });
@@ -97,7 +101,13 @@ export const Post = memo(function Post({ postArgs, onPostClick }) {
       {/* Header */}
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-3'>
-          <img src={avatarImgUrl} alt='Avatar' className='w-10 h-10 rounded-full object-cover' />
+          <img
+            src={avatarImgUrl}
+            alt='User Avatar'
+            className='w-10 h-10 rounded-full object-cover cursor-pointer'
+            onClick={onPostClick}
+          />
+
           <div>
             <p className='font-bold'>{user.userName}</p>
             <p onClick={onPostClick} className='text-sm cursor-pointer text-gray-500'>
