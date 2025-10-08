@@ -13,7 +13,6 @@ export const UserMenu = ({ isOpen, onClose, profileButtonRef }) => {
     profileButtonRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }).isRequired
   };
   const menuRef = useRef(null);
-  const { userAvatarUrl, userName } = useContext(UserInfoProvider);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -51,8 +50,8 @@ export const UserMenu = ({ isOpen, onClose, profileButtonRef }) => {
           to={`/profile/${userId}`}
           className='px-2 border-b-2 flex items-center rounded-lg py-2 hover:bg-gray-100 cursor-pointer'
         >
-          <img src={userAvatarUrl} alt='User Avatar' className='w-7 h-7 rounded-full mr-2' />
-          <span className='text-sm font-semibold'>{userName}</span>
+          <img src={userPublicInfo.userAvatarUrl} alt='User Avatar' className='w-7 h-7 rounded-full mr-2' />
+          <span className='text-sm font-semibold'>{userPublicInfo.userName}</span>
         </Link>
         <li className='px-2 rounded-lg py-2 hover:bg-gray-100 cursor-pointer'>Settings</li>
         <li onClick={handleLogout} className='px-2 rounded-lg py-2 hover:bg-gray-100 cursor-pointer'>

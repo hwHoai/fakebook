@@ -8,6 +8,8 @@ import { TokenService } from '../../util/tokenService';
 import { UserMessageService } from '../../service/user/message/userMessage';
 import { UserInforService } from '../../service/user/userInforService';
 import { DEFAULT_AVATAR_URL, DEFAULT_AVATAR_FILENAME } from '../../constant/general';
+import { Loading } from '../../components/common/Loading';
+
 export const ChatWithFriend = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -16,9 +18,11 @@ export const ChatWithFriend = () => {
   const [inboxList, setInboxList] = useState([]);
   const [userId, setUserId] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchInbox = async () => {
+      setIsLoading(true);
       try {
         const token = CookieService.getCookie('accessToken');
         if (!token) {
@@ -39,7 +43,9 @@ export const ChatWithFriend = () => {
             if (friend.friendAvatar === DEFAULT_AVATAR_FILENAME || friend.friendAvatar === null) {
               return { ...friend, friendAvatarUrl: DEFAULT_AVATAR_URL };
             } else {
-              const avatarUrl = await UserInforService.getFileFormFirebase(friend.friendAvatar);
+              const avatarUrl = await UserInforService.getFileFormFirebase(
+                `images/${friend.friendId}/avatar/${friend.friendAvatar}`
+              );
               return { ...friend, friendAvatarUrl: avatarUrl };
             }
           })
@@ -55,11 +61,13 @@ export const ChatWithFriend = () => {
         setInboxList(updatedInbox);
       } catch (error) {
         console.error('Error fetching inbox:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchInbox();
-  }, [navigate]);
+  }, [navigate, tempUser]);
 
   useEffect(() => {
     const markMessagesAsRead = async () => {
@@ -94,8 +102,9 @@ export const ChatWithFriend = () => {
       );
       // Move the updated friend to the top of the list
       const updatedFriend = updatedInbox.find((item) => item.friendId === friendId);
-      const otherFriends = updatedInbox.filter((item) => item.friendId !== friendId);
+      if (!updatedFriend) return updatedInbox;
 
+      const otherFriends = updatedInbox.filter((item) => item.friendId !== friendId);
       return [updatedFriend, ...otherFriends];
     });
   }, []);
@@ -103,8 +112,11 @@ export const ChatWithFriend = () => {
   // Find the current friend's name
   const currentFriend = inboxList.find((friend) => friend.friendId === Number(friendId));
   const currentFriendName = currentFriend ? currentFriend.friendUsername : 'Unknown';
-  const friendAvatarUrl =
-    inboxList.find((friend) => friend.friendId === Number(friendId))?.friendAvatarUrl || DEFAULT_AVATAR_URL;
+  const friendAvatarUrl = currentFriend?.friendAvatarUrl || DEFAULT_AVATAR_URL;
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className='flex h-screen bg-white'>

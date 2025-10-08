@@ -39,10 +39,11 @@ export const Header = () => {
     const fetchAvatars = async () => {
       const updatedSuggestions = await Promise.all(
         suggestions.map(async (user) => {
+          console.log('user', user);
           if (user.avatar === DEFAULT_AVATAR_FILENAME || user.avatar === null) {
             return { ...user, userProfileImageUrl: DEFAULT_AVATAR_URL };
           } else {
-            const avatarUrl = await UserInforService.getFileFormFirebase(user.userProfileImage);
+            const avatarUrl = await UserInforService.getFileFormFirebase(`images/${user.id}/avatar/${user.avatar}`);
             return { ...user, userProfileImageUrl: avatarUrl };
           }
         })
