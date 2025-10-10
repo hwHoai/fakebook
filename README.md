@@ -8,7 +8,7 @@ Fakebook is a modern social networking web application designed to connect peopl
 
 A video demonstration of the Fakebook application is available below. It showcases the user interface, features, and overall user experience.
 
-![Fakebook Demo](./docs/demo/fakebook_demo.gif)
+<video src="https://github.com/user-attachments/assets/812a38a7-12cf-4608-9a01-aae554cff956.mp4" controls="controls" style="max-width: 720px;"></video>
 
 ## 3. Key Features ✨
 
