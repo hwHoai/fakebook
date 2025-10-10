@@ -1,19 +1,16 @@
-# Fakebook - Social Network
+# Fakebook - Social Network 🌐
 
-## 1. Project Introduction
+## 1. Project Introduction 👋
 
 Fakebook is a modern social networking web application designed to connect people. It provides a platform for users to interact, share their thoughts, and communicate in real-time. The project is built with a decoupled architecture, featuring a robust Java Spring Boot backend and a dynamic React frontend.
 
-## 2. Visual Demo
+## 2. Visual Demo 🎥
 
 A video demonstration of the Fakebook application is available below. It showcases the user interface, features, and overall user experience.
 
-<video controls width="720">
-<source src="docs/demo/fakebook_demo.mp4" type="video/mp4">
-Your browser does not support the video tag.
-</video>
+![Fakebook Demo](docs/demo/fakebook_demo.gif)
 
-## 3. Key Features
+## 3. Key Features ✨
 
 - **User Authentication**: Secure user registration and login system using JWT.
 - **Real-time Chat**: Instant messaging with other users powered by WebSockets (StompJS).
@@ -23,9 +20,9 @@ Your browser does not support the video tag.
 - **Follow System**: Users can follow and unfollow others to see their posts in the news feed.
 - **Responsive UI**: A modern and responsive user interface built with React and Tailwind CSS.
 
-## 4. Tech Stack
+## 4. Tech Stack 🛠️
 
-### Backend
+### Backend ☕
 
 - **Java 23**
 - **Spring Boot 3.4.2**
@@ -35,7 +32,7 @@ Your browser does not support the video tag.
 - **JSON Web Token (JWT)**: For securing APIs.
 - **Lombok**: To reduce boilerplate code.
 
-### Frontend
+### Frontend ⚛️
 
 - **React 19**
 - **Vite**: Frontend tooling and build tool.
@@ -47,13 +44,13 @@ Your browser does not support the video tag.
 - **Formik & Yup**: For form handling and validation.
 - **Shadcn/ui**: For UI components.
 
-### Database & DevOps
+### Database & DevOps 🐬
 
 - **MySQL**: Relational database.
 - **Docker & Docker Compose**: For containerization and local development environment setup.
 - **Firebase Storage**: For storing user-uploaded images and videos.
 
-## 5. Project Structure
+## 5. Project Structure 📁
 
 The project is organized into two main parts: a backend (`be`) and a frontend (`fe`).
 
@@ -103,7 +100,7 @@ The project is organized into two main parts: a backend (`be`) and a frontend (`
   - `src/hooks`: Contains custom React hooks for managing state and side effects.
   - `src/redux`: For state management.
 
-## 6. Project Endpoints
+## 6. Project Endpoints 🔌
 
 The backend exposes a set of RESTful APIs and WebSocket endpoints. Below is a summary of the main endpoints available under the `/api/v1` prefix.
 
@@ -141,7 +138,7 @@ The backend exposes a set of RESTful APIs and WebSocket endpoints. Below is a su
 - `GET /chat/{friendId}`: Get the chat history with a specific friend (paginated).
 - `POST /chat/mark_read/{friendId}`: Mark messages from a friend as read.
 
-### Real-time Chat (WebSocket)
+### Real-time Chat (WebSocket) 💬
 
 - **Endpoint**: `/ws`
 - **Send Message**: `@MessageMapping("/chat")` - Send a chat message to this destination.
