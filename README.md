@@ -1,179 +1,150 @@
-# Fakebook
+# Fakebook - Social Network
 
-A modular, production-focused social networking reference application built with a Java (Spring) multi-module backend and a modern React + Vite frontend. This README explains the architecture, key features, how to run the project (development and Docker), environment variables, and contributor guidance — crafted to help engineers quickly understand, run, and contribute to the project.
+## 1. Project Introduction
 
----
+Fakebook is a modern social networking web application designed to connect people. It provides a platform for users to interact, share their thoughts, and communicate in real-time. The project is built with a decoupled architecture, featuring a robust Java Spring Boot backend and a dynamic React frontend.
 
-## Quick highlights
+## 2. Visual Demo
 
-- Backend: Java 23, Spring Boot multi-module (domain, infrastructure, application, controller, start).
-- Frontend: React 19, Vite, Tailwind-based UI, i18n, Firebase storage integration, real-time chat (WebSocket + STOMP).
-- Auth: JWT-based authentication and token refresh flows.
-- Dev ergonomics: Hot reload for the frontend (Vite), Maven for the backend, Docker and docker-compose for local stacks.
+A video demonstration of the Fakebook application is available below. It showcases the user interface, features, and overall user experience.
 
----
+<video controls width="720">
+<source src="docs/demo/fakebook_demo.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
 
-## Project purpose
+## 3. Key Features
 
-Fakebook is a full-stack sample/social application designed as a learning and evaluation platform. It demonstrates:
-- Clean separation of concerns via a multi-module Maven backend.
-- Modern frontend tooling and patterns (React + Vite, providers, hooks, and modular components).
-- Real-time messaging using WebSocket/STOMP.
-- Secure authentication with JWT and token management.
-- Integration with external storage (Firebase) for user assets.
+- **User Authentication**: Secure user registration and login system using JWT.
+- **Real-time Chat**: Instant messaging with other users powered by WebSockets (StompJS).
+- **News Feed**: A dynamic feed to view posts from friends and recommended users. Users can create, read, update, and delete their own posts.
+- **User Profiles**: View and manage user profiles, including personal information and posts.
+- **Search**: Find other users on the platform by their name.
+- **Follow System**: Users can follow and unfollow others to see their posts in the news feed.
+- **Responsive UI**: A modern and responsive user interface built with React and Tailwind CSS.
 
----
+## 4. Tech Stack
 
-## Repo layout (high-level)
+### Backend
 
-- `/fe` — Frontend (React + Vite). Key files: `package.json`, `src/App.jsx`, routes, hooks, services, and UI components.
-- `/be` — Backend parent module (Maven). Contains 5 modules:
-  - `domain` — core domain models
-  - `infrastructure` — adapters, repositories
-  - `application` — business logic/services
-  - `controller` — REST/WebSocket controllers
-  - `start` — Spring Boot starter module (produces executable jar)
-- `/be/environment` — docker-compose for running backend + MySQL locally.
+- **Java 23**
+- **Spring Boot 3.4.2**
+- **Spring Security**: For authentication and authorization.
+- **Spring Web & WebSocket**: For REST APIs and real-time communication.
+- **Maven**: Dependency management.
+- **JSON Web Token (JWT)**: For securing APIs.
+- **Lombok**: To reduce boilerplate code.
 
----
+### Frontend
 
-## Tech stack
+- **React 19**
+- **Vite**: Frontend tooling and build tool.
+- **Tailwind CSS**: For styling.
+- **Axios**: For making HTTP requests to the backend.
+- **StompJS**: WebSocket client for real-time features.
+- **React Router**: For client-side routing.
+- **i18next**: For internationalization.
+- **Formik & Yup**: For form handling and validation.
+- **Shadcn/ui**: For UI components.
 
-- Backend: Java 23, Spring Boot, Spring Security, java-jwt, Lombok, WebSocket (spring-boot-starter-websocket)
-- Frontend: React 19, Vite, TailwindCSS, i18next, Firebase, Axios, Formik, Yup
-- Realtime: STOMP over WebSocket (`@stomp/stompjs`)
-- Build & packaging: Maven (multi-module), Vite
-- Containerization: Docker, Docker Compose
+### Database & DevOps
 
----
+- **MySQL**: Relational database.
+- **Docker & Docker Compose**: For containerization and local development environment setup.
+- **Firebase Storage**: For storing user-uploaded images and videos.
 
-## Local development (recommended)
+## 5. Project Structure
 
-Prerequisites (install on your machine):
-- Java 23 (OpenJDK 23)
-- Maven 3.8+
-- Node.js (18+ recommended) and npm or yarn
-- Docker & Docker Compose (for containerized runs)
+The project is organized into two main parts: a backend (`be`) and a frontend (`fe`).
 
-Important: examples below assume you are using Windows `cmd.exe` (replace with PowerShell or bash equivalents where needed).
-
-1) Start the frontend (dev mode)
-
-Open a terminal and run:
-
-```cmd
-cd fe
-npm install
-npm run dev
+```
+/
+├── be/         # Backend (Spring Boot)
+│   ├── application/
+│   ├── controller/
+│   ├── domain/
+│   ├── infrastructure/
+│   ├── start/
+│   ├── environment/
+│   └── pom.xml
+│
+├── fe/         # Frontend (React + Vite)
+│   ├── public/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── config/
+│   │   ├── constant/
+│   │   ├── hooks/
+│   │   ├── redux/
+│   │   ├── route/
+│   │   ├── screen/
+│   │   ├── service/
+│   │   └── ...
+│   ├── package.json
+│   └── vite.config.js
+│
+└── docs/       # Documentation and demo assets
 ```
 
-(Or with yarn)
+- **`be`**: The backend is a multi-module Maven project following Domain-Driven Design (DDD) principles.
 
-```cmd
-cd fe
-yarn
-yarn dev
-```
+  - `start`: The main entry point of the Spring Boot application.
+  - `controller`: Contains REST controllers for handling API requests.
+  - `application`: Contains application services and business logic.
+  - `domain`: Contains domain models and entities.
+  - `infrastructure`: Handles data persistence, external services, and other infrastructure concerns.
+  - `environment`: Contains `docker-compose.yaml` for setting up the development environment.
 
-Vite will start with hot module reload (HMR). The local URL will be printed by Vite (commonly http://localhost:5173).
+- **`fe`**: The frontend is a React application built with Vite.
+  - `src/screen`: Contains the main pages of the application (Login, Register, Chat, etc.).
+  - `src/components`: Contains reusable UI components.
+  - `src/service`: Contains services for communicating with the backend API.
+  - `src/hooks`: Contains custom React hooks for managing state and side effects.
+  - `src/redux`: For state management.
 
-2) Start the backend (local Maven build)
+## 6. Project Endpoints
 
-From the repository root (or `be` folder):
+The backend exposes a set of RESTful APIs and WebSocket endpoints. Below is a summary of the main endpoints available under the `/api/v1` prefix.
 
-```cmd
-cd be
-mvn -DskipTests clean package
-```
+### Authentication (`/api/v1/user`)
 
-Run the Spring Boot jar produced by the `start` module. Replace `<jar-file>.jar` with the actual filename generated in `be\start\target`.
+- `POST /register`: User registration.
+- `POST /login`: User login.
+- `POST /renew_tokens`: Refresh access token using a refresh token.
 
-```cmd
-java -jar start\target\<artifact>-1.0-SNAPSHOT.jar
-```
+### Users & Profiles (`/api/v1/user`)
 
-Alternatively, run directly with Maven (convenient during development):
+- `GET /info/{userId}`: Get a user's public profile information.
+- `PATCH /update/user_avatar`: Update the current user's avatar.
+- `GET /search`: Search for users by a query string.
+- `GET /search_profile`: Search for user profiles with follow status relative to the current user.
+- `GET /recommend/{userId}`: Get a list of recommended users to follow.
+- `GET /contacts/{userId}`: Get the contact list (friends) of a user.
 
-```cmd
-cd be\start
-mvn spring-boot:run
-```
+### Following (`/api/v1/user`)
 
-3) Run with Docker Compose (backend + MySQL)
+- `POST /follow/{profileUserId}`: Follow a user.
+- `POST /unfollow/{profileUserId}`: Unfollow a user.
+- `GET /check_follow/{profileUserId}`: Check if the current user is following another user.
 
-The compose file is located at `be/environment/docker-compose.yaml`. It builds the backend Docker image using the `be/Dockerfile` and starts a MySQL service.
+### Feeds/Posts (`/api/v1/feed`)
 
-Example (cmd.exe):
+- `POST /create`: Create a new post.
+- `GET /new_feeds`: Get the news feed for a logged-in user.
+- `GET /guest/new_feeds`: Get the news feed for a guest user.
+- `GET /user_feeds/{userId}`: Get all feeds posted by a specific user.
 
-```cmd
-cd be\environment
-:: set required environment variables for docker-compose interpolation
-set BE_PORT=8080
-set DB_HOST_NAME=mysql
-set DB_PORT=3306
-set DB_NAME=fakebook_db
-set DB_USERNAME=fakebook_user
-set DB_PASSWORD=secret
-set DB_ROOT_PASSWORD=supersecret
+### Messaging (`/api/v1/message`)
 
-docker-compose up --build
-```
+- `GET /inbox/{userId}`: Get the user's message inbox list.
+- `GET /chat/{friendId}`: Get the chat history with a specific friend (paginated).
+- `POST /chat/mark_read/{friendId}`: Mark messages from a friend as read.
 
-Note: `docker-compose.yaml` expects these environment variables. You may also place them in a `.env` file adjacent to the compose file.
+### Real-time Chat (WebSocket)
 
----
-
-## Environment variables (quick reference)
-
-The following are referenced by the backend `docker-compose` configuration:
-
-- BE_PORT — external port for the backend service (e.g., 8080)
-- DB_HOST_NAME — hostname for MySQL service (used inside compose)
-- DB_PORT — MySQL port (default 3306)
-- DB_NAME — database name
-- DB_USERNAME — database user
-- DB_PASSWORD — database password
-- DB_ROOT_PASSWORD — root user password
-
-Frontend may use Vite env vars (VITE_ prefix) if present for API base URLs or feature flags — check `fe/src/config` or `fe/src/service` for usages.
+- **Endpoint**: `/ws`
+- **Send Message**: `@MessageMapping("/chat")` - Send a chat message to this destination.
+- **Receive Messages**: Subscribe to `/topic/messages/{userId}` to receive real-time messages.
 
 ---
-
-## Notable implementation details
-
-- Authentication: JWT token handling and refresh flows live in the frontend util (tokenService) and backend security configuration (Spring Security + java-jwt).
-- Real-time chat: STOMP client (`@stomp/stompjs`) on the frontend and Spring WebSocket on the backend provide pub/sub messaging for chat.
-- Media storage: frontend integrates Firebase SDK for uploading user images.
-- Modular design: backend modules separate domain, application logic, infrastructure adapters, controllers, and the runnable `start` module.
-- Frontend structure: provider-based global state, hooks for contacts/chat, and reusable UI components.
-
----
-
-## Useful developer scripts
-
-Frontend (from `fe`):
-- npm run dev — start dev server (HMR)
-- npm run build — production build
-- npm run preview — preview the production build
-- npm run lint — run ESLint
-- npm run prettier — format code with Prettier
-
-Backend (from `be`):
-- mvn -DskipTests clean package — build all modules and create jar
-- mvn -pl start spring-boot:run — run start module in dev mode
-
-Docker:
-- docker-compose up --build — build images and start services
-- docker-compose down -v — tear down and remove volumes
-
----
-
-## Project conventions and coding guidance
-
-- Java: target Java 23; follow package separation used by modules. Use Lombok for boilerplate reduction, prefer immutability in domain objects where appropriate.
-- Frontend: follow existing component and hooks structure (`src/components`, `src/hooks`, `src/service`). Use i18n for user-facing strings; keep logic in services and hooks, not in view components.
-- Tests: add unit tests in the standard Maven/Node locations (JUnit for backend, your preferred test runner for frontend).
-
----
-
-Thank you for checking out Fakebook — a modular, opinionated starter for a social app with modern frontend tooling and a production-ready Java backend.
